@@ -1,2 +1,2 @@
 # medical-exam-list
-Aplicação web para listagem de exames médicos feita em Ruby com Sinatra e PostgreSQL.
+Web application for medical examination listing made in Ruby with Sinatra and PostgreSQL.
