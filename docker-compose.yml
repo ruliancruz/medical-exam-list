@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    container_name: app_web_server
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - 3000:3000
+
+  db:
+    image: postgres
+    container_name: database
+    environment:
+      POSTGRES_USER: manager
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: maindb
+    volumes:
+      - medical_exam_list_data:/var/lib/postgresql/data
+
+volumes:
+  medical_exam_list_data:
