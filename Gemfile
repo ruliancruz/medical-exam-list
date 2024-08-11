@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rack'
-gem 'sinatra'
 gem 'puma'
+gem 'sinatra'
+gem 'pg'
+gem 'rspec'

@@ -1,6 +1,6 @@
-FROM ruby:3.3.1
+FROM ruby:3.3.0
 
-COPY Gemfile
+COPY Gemfile ./
 RUN bundle install
 
 CMD ['ruby', 'server.rb']
