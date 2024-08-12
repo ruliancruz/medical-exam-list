@@ -34,7 +34,7 @@
 
 :heavy_check_mark: List medical exams
 
-:heavy_check_mark: Import data from .csv files to database
+:heavy_check_mark: Import data from `.csv` files to database
 
 ## API Endpoints
 
@@ -119,17 +119,17 @@ Now you can access the application through http://localhost:3000/ route.
 
 ### Populating the Database
 
-To populate the application's database from the default .csv file, run:
+To populate the application's database from the default `.csv` file, run:
 
 ```
 rake db:import_from_csv
 ```
 
-You can change de default .csv path on DEFAULT_PATH constant on: `app/services/csv_importer.rb`
+You can change de default `.csv` path on DEFAULT_PATH constant on: `app/services/csv_importer.rb`
 
 ### Database Settings
 
-For better security, I recommend you to change the default database credentials when using the application, you can do it change the environment variable values used on Docker on .env file:
+For better security, I recommend you to change the default database credentials when using the application, you can do it change the environment variable values used on Docker on `.env` file:
 ```env
 POSTGRES_USER=your_user
 POSTGRES_PASSWORD=your_password
