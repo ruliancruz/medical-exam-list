@@ -1,6 +1,5 @@
 require 'pg'
-require 'connection_pool'
-require './db/database_connection_manager'
+require './app/services/database_connection_manager'
 
 RSpec.describe DatabaseConnectionManager do
   before(:each) { DatabaseConnectionManager.reset_pool }
@@ -21,7 +20,7 @@ RSpec.describe DatabaseConnectionManager do
     end
 
     it 'handles concurrent connections safely' do
-      threads = Array.new(10) do
+      threads = Array.new 10 do
         Thread.new do
           DatabaseConnectionManager.get_connection do |connection|
             expect(connection).to be_an_instance_of PG::Connection
