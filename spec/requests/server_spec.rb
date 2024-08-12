@@ -51,5 +51,26 @@ RSpec.describe 'Server' do
       expect(last_response).to be_ok
       expect(JSON.parse(last_response.body)).to eq []
     end
+
+    it 'returns a error message if database is not migrated' do
+      DatabaseTableManager.drop_all
+
+      get '/tests'
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database table not found'
+    end
+
+    it 'returns a error message if it fails to connect to the database' do
+      allow(DatabaseConnectionManager)
+        .to receive(:get_connection)
+        .and_raise PG::ConnectionBad
+
+      get '/tests'
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database connection failure'
+    end
   end
 end
