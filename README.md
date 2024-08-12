@@ -189,9 +189,3 @@ Now you can run all the tests with:
 ```
 rspec
 ```
-
-## License
-
-[The Unlicense](https://github.com/ruliancruz/medical-exam-list/blob/main/LICENSE)
-
-Copyright ©️ 2024 - Medical Exam List
