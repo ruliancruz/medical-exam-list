@@ -1,6 +1,7 @@
 require './app/services/database_connection_manager'
 
 DROP_SCRIPT_PATH = './db/scripts/drop_tables.sql'.freeze
+MIGRATIONS_PATH = './db/migrations/*.sql'.freeze
 
 class DatabaseTableManager
   class << self
@@ -11,7 +12,7 @@ class DatabaseTableManager
     def migrate
       connection = DatabaseConnectionManager.use_connection
 
-      Dir.glob('./db/migrations/*.sql').sort.each do |sql_file|
+      Dir.glob(MIGRATIONS_PATH).sort.each do |sql_file|
         connection.exec File.read sql_file
       end
     end

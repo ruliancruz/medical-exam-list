@@ -56,6 +56,8 @@ RSpec.describe 'Server' do
       DatabaseTableManager.drop_all
 
       get '/tests'
+
+      puts DatabaseConnectionManager.use_connection.exec('SELECT version();').to_a
       expect(last_response.status).to eq 503
       expect(JSON.parse(last_response.body)['error'])
         .to include 'Database table not found'
