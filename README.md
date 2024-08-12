@@ -26,9 +26,9 @@
 
 :small_blue_diamond: [Gems Installed](#gems-installed)
 
-:small_blue_diamond: [Entity-Relationship Diagram](#entity-relationship-diagram)
-
 :small_blue_diamond: [How to Run Tests](#how-to-run-tests)
+
+:small_blue_diamond: [Entity-Relationship Diagram](#entity-relationship-diagram)
 
 ## What the Application Can Do
 
@@ -170,10 +170,6 @@ This is automatically installed when you start up Docker container or run Bundle
 
 :gem: [Sinatra](https://github.com/sinatra/sinatra)
 
-## Entity-Relationship Diagram
-
-Comming soon.
-
 ## How to Run Tests
 
 This project was made using Test Driven Development.
@@ -189,3 +185,7 @@ Now you can run all the tests with:
 ```
 rspec
 ```
+
+## Entity-Relationship Diagram
+
+![Entity-Relationship Diagram](https://github.com/user-attachments/assets/78837b81-ac95-4b76-8406-cc9e9947159d)
