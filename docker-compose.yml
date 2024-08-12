@@ -40,7 +40,7 @@ services:
       - test_db
 
   db:
-    image: postgres
+    image: postgres:${POSTGRES_VERSION}
     container_name: database
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -52,7 +52,7 @@ services:
       - medical_exam_list_data:/var/lib/postgresql/test_data
 
   test_db:
-    image: postgres
+    image: postgres:${POSTGRES_VERSION}
     container_name: test_database
     environment:
       POSTGRES_USER: ${TEST_POSTGRES_USER}
