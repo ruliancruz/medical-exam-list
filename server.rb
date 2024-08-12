@@ -2,11 +2,9 @@ require 'sinatra'
 require 'rack/handler/puma'
 require './app/services/exam_service'
 
-CSV_PATH = './storage/data.csv'.freeze
-
 get '/tests' do
   content_type :json
-  CSVService.read_csv(CSV_PATH).to_json
+  ExamService.all_as_json
 end
 
 unless ENV['RACK_ENV'] == 'test'
