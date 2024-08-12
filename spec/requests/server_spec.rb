@@ -63,7 +63,7 @@ RSpec.describe 'Server' do
 
     it 'returns a error message if it fails to connect to the database' do
       allow(DatabaseConnectionManager)
-        .to receive(:get_connection)
+        .to receive(:use_connection)
         .and_raise PG::ConnectionBad
 
       get '/tests'

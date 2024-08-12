@@ -5,12 +5,12 @@ RSpec.describe DatabaseConnectionManager do
   before(:each) { DatabaseConnectionManager.reset_pool }
   after(:each) { DatabaseConnectionManager.shutdown_pool }
 
-  describe '#get_connection' do
+  describe '#use_connection' do
     it 'reuses connections from the pool' do
       connections = []
 
       2.times do
-        DatabaseConnectionManager.get_connection do |connection|
+        DatabaseConnectionManager.use_connection do |connection|
           connections << connection
         end
       end
@@ -22,13 +22,13 @@ RSpec.describe DatabaseConnectionManager do
     it 'handles concurrent connections safely' do
       threads = Array.new 10 do
         Thread.new do
-          DatabaseConnectionManager.get_connection do |connection|
+          DatabaseConnectionManager.use_connection do |connection|
             expect(connection).to be_an_instance_of PG::Connection
           end
         end
       end
 
-      threads.each &:join
+      threads.each(&:join)
     end
   end
 end

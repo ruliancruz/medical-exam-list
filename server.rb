@@ -14,5 +14,7 @@ rescue PG::ConnectionBad
 end
 
 unless ENV['RACK_ENV'] == 'test'
-  Rack::Handler::Puma.run Sinatra::Application, Port: 3000, Host: '0.0.0.0'
+  Rack::Handler::Puma.run Sinatra::Application,
+                          Port: 3000,
+                          Host: '0.0.0.0'
 end
