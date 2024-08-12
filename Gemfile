@@ -7,4 +7,5 @@ gem 'rack'
 gem 'rack-test'
 gem 'rspec'
 gem 'rubocop', require: false
+gem 'simplecov', require: false
 gem 'sinatra'
