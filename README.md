@@ -103,7 +103,7 @@ This application was made to run with [**Docker**](https://www.docker.com/), and
 
 ## How to Run the Application
 
-After installing docker, clone this respository:
+After installing Docker, clone this respository:
 
 ```
 git clone https://github.com/ruliancruz/medical-exam-list.git
