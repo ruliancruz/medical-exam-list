@@ -1,18 +1,65 @@
-require 'csv'
-require 'json'
 require './app/services/database_connection_manager'
 
 class ExamService
   class << self
     def all_as_json
-      DatabaseConnectionManager
-        .use_connection
-        .exec(select_all_query)
-        .map { |row| row.transform_keys(&:to_s) }
-        .to_json
+      rows = DatabaseConnectionManager.use_connection.exec(select_all_query)
+      requests = map_requests(rows)
+      requests.values.to_json
     end
 
     private
+
+    def map_requests(rows)
+      requests = {}
+
+      rows.each do |row|
+        token = row['request_token']
+        requests[token] ||= build_request(row)
+        add_exam_to_request(requests[token], row) if any_exam?(row)
+      end
+
+      requests
+    end
+
+    def any_exam?(row)
+      row['exam_type'] || row['exam_limits'] || row['exam_result']
+    end
+
+    def build_request(row)
+      {
+        'token' => row['request_token'],
+        'date' => row['request_date'],
+        'patient' => build_patient(row),
+        'doctor' => build_doctor(row),
+        'exams' => []
+      }
+    end
+
+    def build_patient(row)
+      {
+        'cpf' => row['patient_cpf'],
+        'name' => row['patient_name'],
+        'email' => row['patient_email'],
+        'birthdate' => row['patient_birthdate']
+      }
+    end
+
+    def build_doctor(row)
+      {
+        'crm' => row['doctor_crm'],
+        'crm_state' => row['doctor_state'],
+        'name' => row['doctor_name']
+      }
+    end
+
+    def add_exam_to_request(request, row)
+      request['exams'] << {
+        'type' => row['exam_type'],
+        'limits' => row['exam_limits'],
+        'result' => row['exam_result']
+      }
+    end
 
     def select_all_query
       <<-SQL

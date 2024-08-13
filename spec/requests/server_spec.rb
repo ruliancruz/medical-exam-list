@@ -21,30 +21,27 @@ RSpec.describe 'Server' do
       expect(last_response).to be_ok
 
       json = JSON.parse last_response.body
-      first_patient = json.first['patient']
-      first_doctor = json.first['doctor']
-      first_exam = json.first['exam']
 
       expect(json.length).to eq 2
       expect(json.first['token']).to eq 'IQCZ17'
       expect(json.first['date']).to eq '2021-08-05'
-      expect(first_patient['cpf']).to eq '048.973.170-88'
-      expect(first_patient['name']).to eq 'Emilly Batista Neto'
-      expect(first_patient['email']).to eq 'gerald.crona@ebert-quigley.com'
-      expect(first_patient['birthdate']).to eq '2001-03-11'
-      expect(first_patient['address']).to eq '165 Rua Rafaela'
-      expect(first_patient['city']).to eq 'Ituverava'
-      expect(first_patient['state']).to eq 'Alagoas'
-      expect(first_doctor['crm']).to eq 'B000BJ20J4'
-      expect(first_doctor['state']).to eq 'PI'
-      expect(first_doctor['name']).to eq 'Maria Luiza Pires'
-      expect(first_doctor['email']).to eq 'denna@wisozk.biz'
-      expect(first_exam['type']).to eq 'hemácias'
-      expect(first_exam['limits']).to eq '45-52'
-      expect(first_exam['result']).to eq '97'
+      expect(json.first['patient']['cpf']).to eq '048.973.170-88'
+      expect(json.first['patient']['name']).to eq 'Emilly Batista Neto'
+      expect(json.first['patient']['email']).to eq 'gerald.crona@ebert.com'
+      expect(json.first['patient']['birthdate']).to eq '2001-03-11'
+      expect(json.first['doctor']['crm']).to eq 'B000BJ20J4'
+      expect(json.first['doctor']['crm_state']).to eq 'PI'
+      expect(json.first['doctor']['name']).to eq 'Maria Luiza Pires'
+      expect(json.first['exams'].first['type']).to eq 'hemácias'
+      expect(json.first['exams'].first['limits']).to eq '45-52'
+      expect(json.first['exams'].first['result']).to eq '97'
+      expect(json.first['exams'].last['type']).to eq 'plaquetas'
+      expect(json.first['exams'].last['limits']).to eq '11-93'
+      expect(json.first['exams'].last['result']).to eq '97'
       expect(json.last['token']).to eq '0W9I67'
       expect(json.last['patient']['cpf']).to eq '048.108.026-04'
       expect(json.last['doctor']['crm']).to eq 'B0002IQM66'
+      expect(json.last['exams'].first['result']).to eq '28'
     end
 
     it 'returns a empty array if database has no registered test' do
