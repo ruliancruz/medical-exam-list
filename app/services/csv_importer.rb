@@ -12,26 +12,31 @@ class CSVImporter
       CSV.foreach(csv_path, headers: true, col_sep: COLUMN_SEPARATOR) do |row|
         patient_id = find_or_create_patient(connection, patient_data(row))
         doctor_id = find_or_create_doctor(connection, doctor_data(row))
-        create_exam(connection, exam_data(row, patient_id, doctor_id))
+
+        request_id = find_or_create_request(
+          connection,
+          request_data(row, patient_id, doctor_id)
+        )
+
+        create_exam(connection, exam_data(row, request_id))
       end
     end
 
     private
 
-    def create_exam(connection, exam_data)
-      connection.exec_params(
-        create_exam_query,
-        exam_data.values
-      )
-    end
-
-    def exam_data(row, patient_id, doctor_id)
+    def exam_data(row, request_id)
       {
-        result_token: row['token resultado exame'],
-        result_date: row['data exame'],
         type: row['tipo exame'],
         limits: row['limites tipo exame'],
         result: row['resultado tipo exame'],
+        request_id: request_id
+      }
+    end
+
+    def request_data(row, patient_id, doctor_id)
+      {
+        token: row['token resultado exame'],
+        date: row['data exame'],
         patient_id: patient_id,
         doctor_id: doctor_id
       }
@@ -58,15 +63,41 @@ class CSVImporter
       }
     end
 
-    def find_or_create_patient(connection, patient_data)
+    def create_exam(connection, exam_data)
+      connection.exec_params(
+        'INSERT INTO exams (type, limits, result, request_id) ' \
+        'VALUES ($1, $2, $3, $4) RETURNING id',
+        exam_data.values
+      )
+    end
+
+    def find_or_create_request(connection, request_data)
       result = connection.exec_params(
-        'SELECT id FROM patients WHERE cpf = $1',
-        [patient_data[:cpf]]
+        'SELECT id FROM requests WHERE token = $1', [request_data[:token]]
       )
 
-      return result[0]['id'] if result.ntuples.positive?
+      return result.first['id'] if result.ntuples.positive?
 
-      connection.exec_params(create_patient_query, patient_data.values)[0]['id']
+      connection.exec_params(
+        'INSERT INTO requests (token, date, patient_id, doctor_id) ' \
+        'VALUES ($1, $2, $3, $4) RETURNING id',
+        request_data.values
+      ).first['id']
+    end
+
+    def find_or_create_patient(connection, patient_data)
+      result = connection.exec_params(
+        'SELECT id FROM patients WHERE cpf = $1', [patient_data[:cpf]]
+      )
+
+      return result.first['id'] if result.ntuples.positive?
+
+      connection.exec_params(
+        'INSERT INTO patients (
+          cpf, name, email, birthdate, address, city, state
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+        patient_data.values
+      ).first['id']
     end
 
     def find_or_create_doctor(connection, doctor_data)
@@ -75,41 +106,13 @@ class CSVImporter
         [doctor_data[:crm], doctor_data[:crm_state]]
       )
 
-      return result[0]['id'] if result.ntuples.positive?
+      return result.first['id'] if result.ntuples.positive?
 
       connection.exec_params(
         'INSERT INTO doctors (crm, crm_state, name, email) ' \
         'VALUES ($1, $2, $3, $4) RETURNING id',
         doctor_data.values
-      )[0]['id']
-    end
-
-    def create_patient_query
-      <<-SQL
-        INSERT INTO patients (
-          cpf,
-          name,
-          email,
-          birthdate,
-          address,
-          city,
-          state
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id
-      SQL
-    end
-
-    def create_exam_query
-      <<-SQL
-        INSERT INTO exams (
-          result_token,
-          result_date,
-          type,
-          limits,
-          result,
-          patient_id,
-          doctor_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-      SQL
+      ).first['id']
     end
   end
 end

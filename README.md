@@ -4,8 +4,8 @@
     <img src="http://img.shields.io/static/v1?label=ruby&message=3.3.0&color=red&style=for-the-badge&logo=ruby"/>
     <img src="https://img.shields.io/static/v1?label=sinatra&message=4.0&color=red&style=for-the-badge&logo=redhat"/>
     <img src="https://img.shields.io/static/v1?label=postgreSQL&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
-    <img src="http://img.shields.io/static/v1?label=test%20coverage&message=98.88%&color=green&style=for-the-badge"/>
-    <img src="http://img.shields.io/static/v1?label=tests&message=6&color=green&style=for-the-badge"/>
+    <img src="http://img.shields.io/static/v1?label=test%20coverage&message=99.11%&color=green&style=for-the-badge"/>
+    <img src="http://img.shields.io/static/v1?label=tests&message=7&color=green&style=for-the-badge"/>
     <img src="http://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
     <img src="http://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
   </div><br>
@@ -20,6 +20,8 @@
 
 :small_blue_diamond: [API Endpoints](#api-endpoints)
 
+:small_blue_diamond: [Page URLs](#page-urls)
+
 :small_blue_diamond: [Dependencies](#dependencies)
 
 :small_blue_diamond: [How to Run the Application](#how-to-run-the-application)
@@ -32,7 +34,9 @@
 
 ## What the Application Can Do
 
-:heavy_check_mark: List medical exams
+:heavy_check_mark: List medical exams on JSON through API
+
+:heavy_check_mark: List medical exams on web page
 
 :heavy_check_mark: Import data from `.csv` files to database
 
@@ -49,43 +53,84 @@ Response Example:
 ```json
 [
   {
-    "patient_cpf": "048.973.170-88",
-    "patient_name": "Emilly Batista Neto",
-    "patient_email": "gerald.crona@ebert-quigley.com",
-    "patient_birthdate": "2001-03-11",
-    "patient_address": "165 Rua Rafaela",
-    "patient_city": "Ituverava",
-    "patient_state": "Alagoas",
-    "doctor_crm": "B000BJ20J4",
-    "doctor_state": "PI",
-    "doctor_name": "Maria Luiza Pires",
-    "doctor_email": "denna@wisozk.biz",
-    "exam_result_token": "IQCZ17",
-    "exam_result_date": "2021-08-05",
-    "exam_type": "hemácias",
-    "exam_limits": "45-52",
-    "exam_result": "97"
+    "token": "IQCZ17",
+    "date": "2021-08-05",
+    "patient": {
+      "cpf": "048.973.170-88",
+      "name": "Emilly Batista Neto",
+      "email": "gerald.crona@ebert-quigley.com",
+      "birthdate": "2001-03-11"
+    },
+    "doctor": {
+      "crm": "B000BJ20J4",
+      "crm_state": "PI",
+      "name": "Maria Luiza Pires"
+    },
+    "exams": [
+      {
+        "type": "hemácias",
+        "limits": "45-52",
+        "result": "97"
+      },
+      {
+        "type": "leucócitos",
+        "limits": "9-61",
+        "result": "89"
+      },
+      {
+        "type": "plaquetas",
+        "limits": "11-93",
+        "result": "97"
+      },
+      {
+        "type": "hdl",
+        "limits": "19-75",
+        "result": "0"
+      }
+    ]
   },
   {
-    "patient_cpf": "048.973.170-88",
-    "patient_name": "Emilly Batista Neto",
-    "patient_email": "gerald.crona@ebert-quigley.com",
-    "patient_birthdate": "2001-03-11",
-    "patient_address": "165 Rua Rafaela",
-    "patient_city": "Ituverava",
-    "patient_state": "Alagoas",
-    "doctor_crm": "B000BJ20J4",
-    "doctor_state": "PI",
-    "doctor_name": "Maria Luiza Pires",
-    "doctor_email": "denna@wisozk.biz",
-    "exam_result_token": "IQCZ17",
-    "exam_result_date": "2021-08-05",
-    "exam_type": "leucócitos",
-    "exam_limits": "9-61",
-    "exam_result": "89"
+    "token": "0W9I67",
+    "date": "2021-07-09",
+    "patient": {
+      "cpf": "048.108.026-04",
+      "name": "Juliana dos Reis Filho",
+      "email": "mariana_crist@kutch-torp.com",
+      "birthdate": "1995-07-03"
+    },
+    "doctor": {
+      "crm": "B0002IQM66",
+      "crm_state": "SC",
+      "name": "Maria Helena Ramalho"
+    },
+    "exams": [
+      {
+        "type": "hemácias",
+        "limits": "45-52",
+        "result": "28"
+      },
+      {
+        "type": "leucócitos",
+        "limits": "9-61",
+        "result": "91"
+      },
+      {
+        "type": "plaquetas",
+        "limits": "11-93",
+        "result": "18"
+      }
+    ]
   }
 ]
 ```
+
+## Page URLs
+
+### Exam List Page
+
+`GET /exams`
+
+Returns a web page showing `GET /tests` endpoint formatted data.
 
 ## Dependencies
 
@@ -103,7 +148,7 @@ This application was made to run with [**Docker**](https://www.docker.com/), and
 
 ## How to Run the Application
 
-After installing Docker, clone this respository:
+After configuring Docker, clone this respository:
 
 ```
 git clone https://github.com/ruliancruz/medical-exam-list.git
@@ -119,13 +164,35 @@ Now you can access the application through http://localhost:3000/ route.
 
 ### Populating the Database
 
-To populate the application's database from the default `.csv` file, run:
+To drop and populate the application's database data from the default `.csv` file, run:
 
 ```
 rake db:import_from_csv
 ```
 
 You can change de default `.csv` path on DEFAULT_PATH constant on: `app/services/csv_importer.rb`
+
+#### Alternatively you can run the tasks separately
+
+To drop all tables run:
+
+```
+rake db:drop
+```
+
+To run all migrations do:
+
+```
+rake db:import_from_csv
+```
+
+And to import data from `.csv` run:
+
+```
+rake db:import
+```
+
+The `rake db:import_from_csv` works running the other 3 tasks together.
 
 ### Database Settings
 
@@ -188,4 +255,4 @@ rspec
 
 ## Entity-Relationship Diagram
 
-![Entity-Relationship Diagram](https://github.com/user-attachments/assets/78837b81-ac95-4b76-8406-cc9e9947159d)
+![Entity-Relationship Diagram](https://github.com/user-attachments/assets/e4501ff4-424e-45c4-a16e-dadb645e6a36)

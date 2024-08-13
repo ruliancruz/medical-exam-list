@@ -12,7 +12,7 @@ Style/BlockComments:
     - 'spec/spec_helper.rb'
 
 Layout/LineLength:
-  Max: 100
+  Max: 80
 
 Metrics/BlockLength:
   Exclude:
