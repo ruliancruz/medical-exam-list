@@ -7,7 +7,9 @@ get '/tests' do
   ExamService.all_as_json
 rescue PG::UndefinedTable
   status :service_unavailable
-  { error: 'Database table not found, run rake db:import_from_csv to set it up' }.to_json
+  {
+    error: 'Database table not found, run rake db:import_from_csv to set it up'
+  }.to_json
 rescue PG::ConnectionBad
   status :service_unavailable
   { error: 'Database connection failure' }.to_json
