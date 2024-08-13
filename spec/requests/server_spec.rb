@@ -76,4 +76,14 @@ RSpec.describe 'Server' do
         .to include 'Database connection failure'
     end
   end
+
+  context 'GET /exams' do
+    it 'returns a exam list html page' do
+      get '/exams'
+
+      expect(last_response).to be_ok
+      expect(last_response.content_type).to include 'text/html'
+      expect(last_response.body).to include 'Lista de Exames Médicos'
+    end
+  end
 end

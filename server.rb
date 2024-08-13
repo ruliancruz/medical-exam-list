@@ -15,8 +15,11 @@ rescue PG::ConnectionBad
   { error: 'Database connection failure' }.to_json
 end
 
+get '/exams' do
+  content_type :html
+  File.read 'public/exams/index.html'
+end
+
 unless ENV['RACK_ENV'] == 'test'
-  Rack::Handler::Puma.run Sinatra::Application,
-                          Port: 3000,
-                          Host: '0.0.0.0'
+  Rack::Handler::Puma.run Sinatra::Application, Port: 3000, Host: '0.0.0.0'
 end
