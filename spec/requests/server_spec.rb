@@ -19,9 +19,7 @@ RSpec.describe 'Server' do
       get '/tests'
 
       expect(last_response).to be_ok
-
       json = JSON.parse last_response.body
-
       expect(json.length).to eq 2
       expect(json.first['token']).to eq 'IQCZ17'
       expect(json.first['date']).to eq '2021-08-05'
@@ -70,6 +68,65 @@ RSpec.describe 'Server' do
         .and_raise PG::ConnectionBad
 
       get '/tests'
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database connection failure'
+    end
+  end
+
+  context 'GET /tests/:token' do
+    it 'returns exam details for the given token' do
+      DatabaseTableManager.drop_all
+      DatabaseTableManager.migrate
+      CSVImporter.import_to_database './spec/fixtures/data.csv'
+
+      get '/tests/0W9I67'
+
+      expect(last_response).to be_ok
+      json = JSON.parse last_response.body
+      expect(json['token']).to eq '0W9I67'
+      expect(json['date']).to eq '2021-07-09'
+      expect(json['patient']['cpf']).to eq '048.108.026-04'
+      expect(json['patient']['name']).to eq 'Juliana dos Reis Filho'
+      expect(json['patient']['email']).to eq 'mariana_crist@kutch-torp.com'
+      expect(json['patient']['birthdate']).to eq '1995-07-03'
+      expect(json['doctor']['crm']).to eq 'B0002IQM66'
+      expect(json['doctor']['crm_state']).to eq 'SC'
+      expect(json['doctor']['name']).to eq 'Maria Helena Ramalho'
+      expect(json['exams'].first['type']).to eq 'hemácias'
+      expect(json['exams'].first['limits']).to eq '45-52'
+      expect(json['exams'].first['result']).to eq '28'
+    end
+
+    it 'returns not found error if the token is not registered' do
+      DatabaseTableManager.drop_all
+      DatabaseTableManager.migrate
+
+      get '/tests/RUBY42'
+      puts last_response.inspect
+
+      expect(last_response).to be_not_found
+      expect(JSON.parse(last_response.body)['error'])
+        .to eq 'No exam with token RUBY42 found'
+    end
+
+    it 'returns a error message if database is not migrated' do
+      DatabaseTableManager.drop_all
+
+      get '/tests/0W9I67'
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database table not found'
+    end
+
+    it 'returns a error message if it fails to connect to the database' do
+      allow(DatabaseConnectionManager)
+        .to receive(:use_connection)
+        .and_raise PG::ConnectionBad
+
+      get '/tests/0W9I67'
 
       expect(last_response.status).to eq 503
       expect(JSON.parse(last_response.body)['error'])

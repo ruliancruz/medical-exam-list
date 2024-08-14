@@ -8,6 +8,18 @@ class ExamService
       requests.values.to_json
     end
 
+    def find_by_token(token)
+      result = DatabaseConnectionManager
+               .use_connection
+               .exec_params(select_by_token_query, [token])
+
+      return token_not_found_message(token) if result.ntuples.zero?
+
+      request = build_request(result.first)
+      result.each { |row| add_exam_to_request(request, row) if any_exam? row }
+      request.to_json
+    end
+
     private
 
     def map_requests(rows)
@@ -61,6 +73,33 @@ class ExamService
       }
     end
 
+    def select_by_token_query
+      <<-SQL
+        SELECT
+          requests.token AS "request_token",
+          requests.date AS "request_date",
+          patients.cpf AS "patient_cpf",
+          patients.name AS "patient_name",
+          patients.email AS "patient_email",
+          patients.birthdate AS "patient_birthdate",
+          patients.address AS "patient_address",
+          patients.city AS "patient_city",
+          patients.state AS "patient_state",
+          doctors.crm AS "doctor_crm",
+          doctors.crm_state AS "doctor_state",
+          doctors.name AS "doctor_name",
+          doctors.email AS "doctor_email",
+          exams.type AS "exam_type",
+          exams.limits AS "exam_limits",
+          exams.result AS "exam_result"
+        FROM exams
+        JOIN requests ON exams.request_id = requests.id
+        JOIN patients ON requests.patient_id = patients.id
+        JOIN doctors ON requests.doctor_id = doctors.id
+        WHERE requests.token = $1
+      SQL
+    end
+
     def select_all_query
       <<-SQL
         SELECT
@@ -85,6 +124,10 @@ class ExamService
         JOIN patients ON requests.patient_id = patients.id
         JOIN doctors ON requests.doctor_id = doctors.id
       SQL
+    end
+
+    def token_not_found_message(token)
+      { error: "No exam with token #{token} found" }.to_json
     end
   end
 end
