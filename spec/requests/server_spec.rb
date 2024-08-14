@@ -1,6 +1,6 @@
 require 'rack/test'
 require './server'
-require './app/services/database_table_manager'
+require './app/services/database/database_table_manager'
 require './app/services/csv_importer'
 
 RSpec.describe 'Server' do
@@ -21,6 +21,7 @@ RSpec.describe 'Server' do
       expect(last_response).to be_ok
       json = JSON.parse last_response.body
       expect(json.length).to eq 2
+
       expect(json.first['token']).to eq 'IQCZ17'
       expect(json.first['date']).to eq '2021-08-05'
       expect(json.first['patient']['cpf']).to eq '048.973.170-88'
@@ -36,10 +37,16 @@ RSpec.describe 'Server' do
       expect(json.first['exams'].last['type']).to eq 'plaquetas'
       expect(json.first['exams'].last['limits']).to eq '11-93'
       expect(json.first['exams'].last['result']).to eq '97'
+
       expect(json.last['token']).to eq '0W9I67'
       expect(json.last['patient']['cpf']).to eq '048.108.026-04'
       expect(json.last['doctor']['crm']).to eq 'B0002IQM66'
       expect(json.last['exams'].first['result']).to eq '28'
+
+      expect(json.first['patient']).not_to have_key 'address'
+      expect(json.first['patient']).not_to have_key 'city'
+      expect(json.first['patient']).not_to have_key 'state'
+      expect(json.first['doctor']).not_to have_key 'email'
     end
 
     it 'returns a empty array if database has no registered test' do
@@ -91,9 +98,13 @@ RSpec.describe 'Server' do
       expect(json['patient']['name']).to eq 'Juliana dos Reis Filho'
       expect(json['patient']['email']).to eq 'mariana_crist@kutch-torp.com'
       expect(json['patient']['birthdate']).to eq '1995-07-03'
+      expect(json['patient']['address']).to eq '527 Rodovia Júlio'
+      expect(json['patient']['city']).to eq 'Lagoa da Canoa'
+      expect(json['patient']['state']).to eq 'Paraíba'
       expect(json['doctor']['crm']).to eq 'B0002IQM66'
       expect(json['doctor']['crm_state']).to eq 'SC'
       expect(json['doctor']['name']).to eq 'Maria Helena Ramalho'
+      expect(json['doctor']['email']).to eq 'rayford@kemmer-kunze.info'
       expect(json['exams'].first['type']).to eq 'hemácias'
       expect(json['exams'].first['limits']).to eq '45-52'
       expect(json['exams'].first['result']).to eq '28'
@@ -104,7 +115,6 @@ RSpec.describe 'Server' do
       DatabaseTableManager.migrate
 
       get '/tests/RUBY42'
-      puts last_response.inspect
 
       expect(last_response).to be_not_found
       expect(JSON.parse(last_response.body)['error'])
