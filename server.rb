@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'rack/handler/puma'
+require './helpers/host_helper'
 require './app/services/exam_service'
 
 get '/tests' do
@@ -33,7 +34,7 @@ end
 
 get '/exams' do
   content_type :html
-  File.read 'public/exams/index.html'
+  HostHelper.insert_host File.read('public/exams/index.html'), request.host
 end
 
 unless ENV['RACK_ENV'] == 'test'

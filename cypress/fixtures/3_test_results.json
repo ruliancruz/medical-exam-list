@@ -1,0 +1,248 @@
+[
+  {
+    "token": "IQCZ17",
+    "date": "2021-08-05",
+    "patient": {
+      "cpf": "048.973.170-88",
+      "name": "Emilly Batista Neto",
+      "email": "gerald.crona@ebert-quigley.com",
+      "birthdate": "2001-03-11"
+    },
+    "doctor": {
+      "crm": "B000BJ20J4",
+      "crm_state": "PI",
+      "name": "Maria Luiza Pires"
+    },
+    "exams": [
+      {
+        "type": "hemácias",
+        "limits": "45-52",
+        "result": "97"
+      },
+      {
+        "type": "leucócitos",
+        "limits": "9-61",
+        "result": "89"
+      },
+      {
+        "type": "plaquetas",
+        "limits": "11-93",
+        "result": "97"
+      },
+      {
+        "type": "hdl",
+        "limits": "19-75",
+        "result": "0"
+      },
+      {
+        "type": "ldl",
+        "limits": "45-54",
+        "result": "80"
+      },
+      {
+        "type": "vldl",
+        "limits": "48-72",
+        "result": "82"
+      },
+      {
+        "type": "glicemia",
+        "limits": "25-83",
+        "result": "98"
+      },
+      {
+        "type": "tgo",
+        "limits": "50-84",
+        "result": "87"
+      },
+      {
+        "type": "tgp",
+        "limits": "38-63",
+        "result": "9"
+      },
+      {
+        "type": "eletrólitos",
+        "limits": "2-68",
+        "result": "85"
+      },
+      {
+        "type": "tsh",
+        "limits": "25-80",
+        "result": "65"
+      },
+      {
+        "type": "t4-livre",
+        "limits": "34-60",
+        "result": "94"
+      },
+      {
+        "type": "ácido úrico",
+        "limits": "15-61",
+        "result": "2"
+      }
+    ]
+  },
+  {
+    "token": "0W9I67",
+    "date": "2021-07-09",
+    "patient": {
+      "cpf": "048.108.026-04",
+      "name": "Juliana dos Reis Filho",
+      "email": "mariana_crist@kutch-torp.com",
+      "birthdate": "1995-07-03"
+    },
+    "doctor": {
+      "crm": "B0002IQM66",
+      "crm_state": "SC",
+      "name": "Maria Helena Ramalho"
+    },
+    "exams": [
+      {
+        "type": "hemácias",
+        "limits": "45-52",
+        "result": "28"
+      },
+      {
+        "type": "leucócitos",
+        "limits": "9-61",
+        "result": "91"
+      },
+      {
+        "type": "plaquetas",
+        "limits": "11-93",
+        "result": "18"
+      },
+      {
+        "type": "hdl",
+        "limits": "19-75",
+        "result": "74"
+      },
+      {
+        "type": "ldl",
+        "limits": "45-54",
+        "result": "66"
+      },
+      {
+        "type": "vldl",
+        "limits": "48-72",
+        "result": "41"
+      },
+      {
+        "type": "glicemia",
+        "limits": "25-83",
+        "result": "6"
+      },
+      {
+        "type": "tgo",
+        "limits": "50-84",
+        "result": "32"
+      },
+      {
+        "type": "tgp",
+        "limits": "38-63",
+        "result": "16"
+      },
+      {
+        "type": "eletrólitos",
+        "limits": "2-68",
+        "result": "61"
+      },
+      {
+        "type": "tsh",
+        "limits": "25-80",
+        "result": "13"
+      },
+      {
+        "type": "t4-livre",
+        "limits": "34-60",
+        "result": "9"
+      },
+      {
+        "type": "ácido úrico",
+        "limits": "15-61",
+        "result": "78"
+      }
+    ]
+  },
+  {
+    "token": "T9O6AI",
+    "date": "2021-11-21",
+    "patient": {
+      "cpf": "066.126.400-90",
+      "name": "Matheus Barroso",
+      "email": "maricela@streich.com",
+      "birthdate": "1972-03-09"
+    },
+    "doctor": {
+      "crm": "B000B7CDX4",
+      "crm_state": "SP",
+      "name": "Sra. Calebe Louzada"
+    },
+    "exams": [
+      {
+        "type": "hemácias",
+        "limits": "45-52",
+        "result": "48"
+      },
+      {
+        "type": "leucócitos",
+        "limits": "9-61",
+        "result": "75"
+      },
+      {
+        "type": "plaquetas",
+        "limits": "11-93",
+        "result": "67"
+      },
+      {
+        "type": "hdl",
+        "limits": "19-75",
+        "result": "3"
+      },
+      {
+        "type": "ldl",
+        "limits": "45-54",
+        "result": "27"
+      },
+      {
+        "type": "vldl",
+        "limits": "48-72",
+        "result": "27"
+      },
+      {
+        "type": "glicemia",
+        "limits": "25-83",
+        "result": "78"
+      },
+      {
+        "type": "tgo",
+        "limits": "50-84",
+        "result": "15"
+      },
+      {
+        "type": "tgp",
+        "limits": "38-63",
+        "result": "34"
+      },
+      {
+        "type": "eletrólitos",
+        "limits": "2-68",
+        "result": "92"
+      },
+      {
+        "type": "tsh",
+        "limits": "25-80",
+        "result": "21"
+      },
+      {
+        "type": "t4-livre",
+        "limits": "34-60",
+        "result": "95"
+      },
+      {
+        "type": "ácido úrico",
+        "limits": "15-61",
+        "result": "10"
+      }
+    ]
+  }
+]

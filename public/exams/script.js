@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchData() {
     try {
-      const response = await fetch('http://localhost:3000/tests');
+      const response = await fetch(`${host}/tests`);
       if (!response.ok) { throw new Error('Service unavailable'); }
       examsData = await response.json();
       renderPage(currentPage);
