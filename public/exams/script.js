@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const paginatedData = examsData.slice(start, end);
-
+    
     if (paginatedData.length === 0) {
       container.innerHTML = '<p class="text-center">Nenhum exame encontrado</p>';
     } else {
@@ -72,10 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
       .disabled = page === Math.ceil(examsData.length / itemsPerPage);
   }
 
+  function checkServiceAvailability(response) {
+    if (response.status === 503) {
+      alert('A conexão com o servidor falhou');
+      return false;
+    }
+
+    return true;
+  }
+
   async function fetchData() {
     try {
       const response = await fetch(`${host}/tests`);
+
+      checkServiceAvailability(response);
       if (!response.ok) { throw new Error('Service unavailable'); }
+
       examsData = await response.json();
       renderPage(currentPage);
     } catch (error) {
@@ -100,7 +112,15 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchExamByToken(token) {
     try {
       const response = await fetch(`${host}/tests/${token}`);
-      if (!response.ok) { throw new Error('Service unavailable'); }
+
+      if (response.status === 404) {
+        alert(`Nenhum exame encontrado com o token ${token}`);
+        return;
+      }
+
+      checkServiceAvailability(response)
+      if (!response.ok) { throw new Error('Request failed'); }
+
       const examData = await response.json();
       showModal(examData);
     } catch (error) {

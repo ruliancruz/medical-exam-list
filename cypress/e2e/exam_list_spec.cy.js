@@ -81,6 +81,18 @@ describe('Medical Exams List Page', () => {
   
     cy.contains('Nenhum exame encontrado');
   });
+
+  it('displays a message when it fails to connect to the server', function () {
+    cy.intercept('GET', '**/tests', { body: this.serviceUnavailableData })
+      .as('getTests');
+
+    cy.visit('/exams');
+    cy.wait('@getTests');
+  
+    cy.on('window:alert', (alertText) => {
+      expect(alertText).to.equal('A conexão com o servidor falhou');
+    });
+  });
   
   it('disables previous button on the first page', function () {
     cy.intercept('GET', '**/tests', { body: this.threeTestsData })
@@ -131,6 +143,34 @@ describe('Medical Exams List Page', () => {
       cy.contains('plaquetas');
       cy.contains('11-93');
       cy.contains('97');
+    });
+  });
+
+  it('show alert if exam search returns not found', function () {
+    cy.intercept('GET', '**/tests', { body: this.notFoundData })
+      .as('getTests');
+
+    cy.visit('/exams');
+    cy.wait('@getTests');
+    cy.get('#token').type('RUBY42');
+    cy.get('#fetch-token').click();
+
+    cy.on('window:alert', (alertText) => {
+      expect(alertText).to.equal('Nenhum exame encontrado com o token RUBY42');
+    });
+  });
+
+  it('show alert if exam search returns service unavailable', function () {
+    cy.intercept('GET', '**/tests', { body: this.serviceUnavailableData })
+      .as('getTests');
+
+    cy.visit('/exams');
+    cy.wait('@getTests');
+    cy.get('#token').type('RUBY42');
+    cy.get('#fetch-token').click();
+
+    cy.on('window:alert', (alertText) => {
+      expect(alertText).to.equal('A conexão com o servidor falhou');
     });
   });
 });
