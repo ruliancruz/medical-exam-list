@@ -5,12 +5,16 @@
     "cpf": "048.973.170-88",
     "name": "Emilly Batista Neto",
     "email": "gerald.crona@ebert-quigley.com",
-    "birthdate": "2001-03-11"
+    "birthdate": "2001-03-11",
+    "address": "165 Rua Rafaela",
+    "city": "Ituverava",
+    "state": "Alagoas"
   },
   "doctor": {
     "crm": "B000BJ20J4",
     "crm_state": "PI",
-    "name": "Maria Luiza Pires"
+    "name": "Maria Luiza Pires",
+    "email": "denna@wisozk.biz"
   },
   "exams": [
     {
