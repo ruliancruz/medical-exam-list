@@ -67,6 +67,8 @@ services:
       dockerfile: Dockerfile.cypress
     image: cypress/included:13.3.3
     container_name: cypress
+    volumes:
+      - .:/app
     tty: true
     stdin_open: true
     depends_on:

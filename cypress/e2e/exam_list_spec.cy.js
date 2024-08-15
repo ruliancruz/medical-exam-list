@@ -1,7 +1,10 @@
 describe('Medical Exams List Page', () => {
   beforeEach(() => {
+    cy.fixture('test_result').as('testData');
     cy.fixture('3_test_results').as('threeTestsData');
     cy.fixture('15_test_results').as('fifteenTestsData');
+    cy.fixture('not_found').as('notFoundData');
+    cy.fixture('service_unavailable').as('serviceUnavailableData');
   });
 
   it('loads the first page of exams', function () {
@@ -44,7 +47,7 @@ describe('Medical Exams List Page', () => {
     });
 
     cy.get('.exam-item').should('have.length.at.most', 10);
-    cy.get('#page-info').should('contain', 'Page 1 of');
+    cy.get('#page-info').should('contain', 'Página 1 de');
   });
 
   it('navigates to the next page of exams', function () {
@@ -55,7 +58,7 @@ describe('Medical Exams List Page', () => {
     cy.wait('@getTests');
     cy.get('#next-button').click();
   
-    cy.get('#page-info').should('contain', 'Page 2 of');
+    cy.get('#page-info').should('contain', 'Página 2 de');
   });
   
   it('navigates to the previous page of exams', function () {
@@ -67,7 +70,7 @@ describe('Medical Exams List Page', () => {
     cy.get('#next-button').click();
     cy.get('#prev-button').click();
 
-    cy.get('#page-info').should('contain', 'Page 1 of');
+    cy.get('#page-info').should('contain', 'Página 1 de');
   });
 
   it('displays a message when no exams are found', function () {
@@ -99,5 +102,35 @@ describe('Medical Exams List Page', () => {
     cy.wait('@getTests');
   
     cy.get('#next-button').should('be.disabled');
+  });
+
+  it('loads an exam detail from a given token', function () {
+    cy.intercept('GET', '**/tests', { body: this.testData })
+      .as('getTests');
+
+    cy.visit('/exams');
+    cy.wait('@getTests');
+    cy.get('#token').type('IQCZ17');
+    cy.get('#fetch-token').click();
+
+    cy.get('#modal-body').within(() => {
+      cy.contains('IQCZ17');
+      cy.contains('Emilly Batista Neto');
+      cy.contains('048.973.170-88');
+      cy.contains('gerald.crona@ebert-quigley.com');
+      cy.contains('2001-03-11');
+      cy.contains('Maria Luiza Pires');
+      cy.contains('B000BJ20J4');
+      cy.contains('PI');
+      cy.contains('hemácias');
+      cy.contains('45-52');
+      cy.contains('97');
+      cy.contains('leucócitos');
+      cy.contains('9-61');
+      cy.contains('89');
+      cy.contains('plaquetas');
+      cy.contains('11-93');
+      cy.contains('97');
+    });
   });
 });
