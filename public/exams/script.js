@@ -3,8 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPage = 1;
   let examsData = [];
 
+  const container = document.getElementById('data-container');
+  const pageInfo = document.getElementById('page-info');
+  const prevButton = document.getElementById('prev-button');
+  const nextButton = document.getElementById('next-button');
+  const tokenInput = document.getElementById('token');
+  const fetchTokenButton = document.getElementById('fetch-token');
+  const modal = document.getElementById('modal');
+  const modalBody = document.getElementById('modal-body');
+  const closeButton = document.querySelector('.close-button');
+
   function renderPage(page) {
-    const container = document.getElementById('data-container');
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const paginatedData = examsData.slice(start, end);
@@ -32,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <section class="exams">
             <h3>Resultados dos Exames</h3>
-            
             <table>
               <thead>
                 <tr>
@@ -41,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   <th>Resultados</th>
                 </tr>
               </thead>
-
               <tbody>
                 ${exam.exams.map(test => `
                   <tr>
@@ -57,81 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('');
     }
 
-    document
-      .getElementById('page-info')
-      .textContent = `
+    pageInfo.textContent = `
         Página ${page} de ${Math.ceil(examsData.length / itemsPerPage)}
       `;
 
-    document
-      .getElementById('prev-button')
-      .disabled = page === 1;
-
-    document
-      .getElementById('next-button')
-      .disabled = page === Math.ceil(examsData.length / itemsPerPage);
-  }
-
-  function checkServiceAvailability(response) {
-    if (response.status === 503) {
-      alert('A conexão com o servidor falhou');
-      return false;
-    }
-
-    return true;
-  }
-
-  async function fetchData() {
-    try {
-      const response = await fetch(`${host}/tests`);
-
-      checkServiceAvailability(response);
-      if (!response.ok) { throw new Error('Service unavailable'); }
-
-      examsData = await response.json();
-      renderPage(currentPage);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-
-  document.getElementById('prev-button').addEventListener('click', () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderPage(currentPage);
-    }
-  });
-
-  document.getElementById('next-button').addEventListener('click', () => {
-    if (currentPage < Math.ceil(examsData.length / itemsPerPage)) {
-      currentPage++;
-      renderPage(currentPage);
-    }
-  });
-
-  async function fetchExamByToken(token) {
-    try {
-      const response = await fetch(`${host}/tests/${token}`);
-
-      if (response.status === 404) {
-        alert(`Nenhum exame encontrado com o token ${token}`);
-        return;
-      }
-
-      checkServiceAvailability(response)
-      if (!response.ok) { throw new Error('Request failed'); }
-
-      const examData = await response.json();
-      showModal(examData);
-    } catch (error) {
-      console.error('Error fetching exam data:', error);
-    }
+    prevButton.disabled = page === 1;
+    nextButton.disabled = page === Math.ceil(examsData.length / itemsPerPage);
   }
 
   function showModal(exam) {
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modal-body');
-
     modalBody.innerHTML = `
       <section class="exam-item">
         <h2>Token do Exame: ${exam.token}</h2>
@@ -181,19 +122,66 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.style.display = "block";
   }
 
-  document.getElementById('fetch-token').addEventListener('click', () => {
-    const token = document.getElementById('token').value;
-    if (token) { fetchExamByToken(token); }
+  async function fetchData() {
+    try {
+      const response = await fetch(`${host}/tests`);
+      checkServiceAvailability(response);
+      if (!response.ok) throw new Error('Service unavailable');
+
+      examsData = await response.json();
+      renderPage(currentPage);
+    } catch (error) { console.error('Error fetching data:', error); }
+  }
+
+  async function fetchExamByToken(token) {
+    try {
+      const response = await fetch(`${host}/tests/${token}`);
+      if (response.status === 404) {
+        alert(`Nenhum exame encontrado com o token ${token}`);
+        return;
+      }
+
+      checkServiceAvailability(response)
+      if (!response.ok) throw new Error('Request failed');
+
+      const examData = await response.json();
+      showModal(examData);
+    } catch (error) { console.error('Error fetching exam data:', error); }
+  }
+
+  function checkServiceAvailability(response) {
+    if (response.status === 503) {
+      alert('A conexão com o servidor falhou');
+      return false;
+    }
+    
+    return true;
+  }
+
+  prevButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderPage(currentPage);
+    }
   });
 
-  document.querySelector('.close-button').addEventListener('click', () => {
-    const modal = document.getElementById('modal');
+  nextButton.addEventListener('click', () => {
+    if (currentPage < Math.ceil(examsData.length / itemsPerPage)) {
+      currentPage++;
+      renderPage(currentPage);
+    }
+  });
+
+  fetchTokenButton.addEventListener('click', () => {
+    if (tokenInput.value) fetchExamByToken(tokenInput.value);
+  });
+
+  closeButton.addEventListener('click', () => {
     modal.style.display = "none";
   });
 
   window.addEventListener('click', (event) => {
-    const modal = document.getElementById('modal');
-    if (event.target == modal) { modal.style.display = "none"; }
+    if (event.target == modal) modal.style.display = "none";
   });
 
   fetchData();

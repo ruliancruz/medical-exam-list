@@ -9,13 +9,11 @@
 <body>
   <header>
     <h1>Lista de Exames Médicos</h1>
-
     <nav id="nav-controls">
       <div id="token-input">
         <input type="text" id="token" placeholder="Insira o token do exame">
         <button id="fetch-token">Buscar</button>
       </div>
-      
       <div id="pagination-controls">
         <button id="prev-button">Anterior</button>
         <span id="page-info"></span>
@@ -26,12 +24,12 @@
   
   <main id="data-container"></main>
   
-  <div id="modal" class="modal">
+  <section id="modal" class="modal">
     <div class="modal-content">
       <span class="close-button">&times;</span>
       <div id="modal-body"></div>
     </div>
-  </div>
+  </section>
   
   <script src="../exams/script.js"></script>
 </body>
