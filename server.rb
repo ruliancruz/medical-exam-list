@@ -32,9 +32,9 @@ rescue PG::ConnectionBad
   { error: 'Database connection failure' }.to_json
 end
 
-get '/exams' do
+get '/' do
   content_type :html
-  HostHelper.insert_host File.read('public/exams/index.html'), request.host
+  HostHelper.insert_host File.read('public/index.html'), request.host
 end
 
 unless ENV['RACK_ENV'] == 'test'

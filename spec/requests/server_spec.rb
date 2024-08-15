@@ -144,9 +144,9 @@ RSpec.describe 'Server' do
     end
   end
 
-  context 'GET /exams' do
+  context 'GET /' do
     it 'returns a exam list html page' do
-      get '/exams'
+      get '/'
 
       expect(last_response).to be_ok
       expect(last_response.content_type).to include 'text/html'

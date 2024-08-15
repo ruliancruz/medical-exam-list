@@ -1,4 +1,4 @@
-describe('Medical Exams List Page', () => {
+describe('Home Page', () => {
   beforeEach(() => {
     cy.fixture('test_result').as('testData');
     cy.fixture('3_test_results').as('threeTestsData');
@@ -11,7 +11,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.threeTestsData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
 
     cy.get('.exam-item').eq(0).within(() => {
@@ -54,7 +54,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.fifteenTestsData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
     cy.get('#next-button').click();
   
@@ -65,7 +65,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.fifteenTestsData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
     cy.get('#next-button').click();
     cy.get('#prev-button').click();
@@ -76,7 +76,7 @@ describe('Medical Exams List Page', () => {
   it('displays a message when no exams are found', function () {
     cy.intercept('GET', '**/tests', { body: [] }).as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
   
     cy.contains('Nenhum exame encontrado');
@@ -86,7 +86,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.serviceUnavailableData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
   
     cy.on('window:alert', (alertText) => {
@@ -98,7 +98,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.threeTestsData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
   
     cy.get('#prev-button').should('be.disabled');
@@ -110,7 +110,7 @@ describe('Medical Exams List Page', () => {
       { body: this.threeTestsData }
     ).as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
   
     cy.get('#next-button').should('be.disabled');
@@ -120,7 +120,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.testData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
     cy.get('#token').type('IQCZ17');
     cy.get('#fetch-token').click();
@@ -150,7 +150,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.notFoundData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
     cy.get('#token').type('RUBY42');
     cy.get('#fetch-token').click();
@@ -164,7 +164,7 @@ describe('Medical Exams List Page', () => {
     cy.intercept('GET', '**/tests', { body: this.serviceUnavailableData })
       .as('getTests');
 
-    cy.visit('/exams');
+    cy.visit('/');
     cy.wait('@getTests');
     cy.get('#token').type('RUBY42');
     cy.get('#fetch-token').click();
