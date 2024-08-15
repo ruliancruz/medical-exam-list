@@ -1,5 +1,5 @@
 require 'csv'
-require './app/services/database_connection_manager'
+require './app/services/database/database_connection_manager'
 
 COLUMN_SEPARATOR = ';'.freeze
 DEFAULT_PATH = './storage/data.csv'.freeze
@@ -10,15 +10,15 @@ class CSVImporter
       connection = DatabaseConnectionManager.use_connection
 
       CSV.foreach(csv_path, headers: true, col_sep: COLUMN_SEPARATOR) do |row|
-        patient_id = find_or_create_patient(connection, patient_data(row))
-        doctor_id = find_or_create_doctor(connection, doctor_data(row))
+        patient_id = find_or_create_patient connection, patient_data(row)
+        doctor_id = find_or_create_doctor connection, doctor_data(row)
 
         request_id = find_or_create_request(
           connection,
           request_data(row, patient_id, doctor_id)
         )
 
-        create_exam(connection, exam_data(row, request_id))
+        create_exam connection, exam_data(row, request_id)
       end
     end
 

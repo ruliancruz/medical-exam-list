@@ -1,7 +1,7 @@
-require './app/services/database_connection_manager'
+require './app/services/database/database_connection_manager'
 
-DROP_SCRIPT_PATH = './db/scripts/drop_tables.sql'.freeze
-MIGRATIONS_PATH = './db/migrations/*.sql'.freeze
+DROP_SCRIPT_PATH = './database/scripts/drop_tables.sql'.freeze
+MIGRATIONS_PATH = './database/migrations/*.sql'.freeze
 
 class DatabaseTableManager
   class << self

@@ -15,6 +15,7 @@ services:
       POSTGRES_PORT: 5432
       DB_POOL_SIZE: 5
       DB_TIMEOUT: 5
+      HOST: http://app:3000
     depends_on:
       - db
 
@@ -49,7 +50,7 @@ services:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432 
     volumes:
-      - medical_exam_list_data:/var/lib/postgresql/test_data
+      - medical_exam_list_data:/var/lib/postgresql/data
 
   test_db:
     image: postgres:${POSTGRES_VERSION}
@@ -60,9 +61,20 @@ services:
       POSTGRES_DB: ${TEST_POSTGRES_DB}
       POSTGRES_HOST: test_db
       POSTGRES_PORT: 5432
+
+  cypress:
+    build:
+      dockerfile: Dockerfile.cypress
+    image: cypress/included:13.3.3
+    container_name: cypress
     volumes:
-      - medical_exam_list_test_data:/var/lib/postgresql/test_data
+      - .:/app
+    tty: true
+    stdin_open: true
+    depends_on:
+      - app
+    environment:
+      - CYPRESS_baseUrl=http://app:3000
 
 volumes:
   medical_exam_list_data:
-  medical_exam_list_test_data:

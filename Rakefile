@@ -1,4 +1,4 @@
-require './app/services/database_table_manager'
+require './app/services/database/database_table_manager'
 require './app/services/csv_importer'
 
 namespace :db do

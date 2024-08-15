@@ -1,13 +1,14 @@
 <div align="center">
   <h1>Medical Exam List</h1>
   <div>
-    <img src="http://img.shields.io/static/v1?label=ruby&message=3.3.0&color=red&style=for-the-badge&logo=ruby"/>
+    <img src="https://img.shields.io/static/v1?label=ruby&message=3.3.0&color=red&style=for-the-badge&logo=ruby"/>
     <img src="https://img.shields.io/static/v1?label=sinatra&message=4.0&color=red&style=for-the-badge&logo=redhat"/>
-    <img src="https://img.shields.io/static/v1?label=postgreSQL&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
-    <img src="http://img.shields.io/static/v1?label=test%20coverage&message=99.11%&color=green&style=for-the-badge"/>
-    <img src="http://img.shields.io/static/v1?label=tests&message=7&color=green&style=for-the-badge"/>
-    <img src="http://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
-    <img src="http://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=postgresql&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
+    <img src="https://img.shields.io/static/v1?label=cypress&message=13.3.3&color=GREEN&style=for-the-badge&logo=cypress&logoColor=white"/>
+    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=98.68%&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=tests&message=21&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
   </div><br>
 
   Web application for medical examination listing.
@@ -19,8 +20,6 @@
 :small_blue_diamond: [What The Application Can Do](#what-the-application-can-do)
 
 :small_blue_diamond: [API Endpoints](#api-endpoints)
-
-:small_blue_diamond: [Page URLs](#page-urls)
 
 :small_blue_diamond: [Dependencies](#dependencies)
 
@@ -36,9 +35,13 @@
 
 :heavy_check_mark: List medical exams on JSON through API
 
+:heavy_check_mark: Show medical exam details on JSON through API
+
 :heavy_check_mark: List medical exams on web page
 
-:heavy_check_mark: Import data from `.csv` files to database
+:heavy_check_mark: Show exam details on web page
+
+:heavy_check_mark: Import data from CSV files to database
 
 ## API Endpoints
 
@@ -124,13 +127,57 @@ Response Example:
 ]
 ```
 
-## Page URLs
+### Exam Details Endpoint
 
-### Exam List Page
+`GET /tests/:token`
 
-`GET /exams`
+Returns the exam details of the informed token. Returns not found if no exam is found for the given token.
 
-Returns a web page showing `GET /tests` endpoint formatted data.
+Response Example:
+
+```json
+{
+  "token": "IQCZ17",
+  "date": "2021-08-05",
+  "patient": {
+    "cpf": "048.973.170-88",
+    "name": "Emilly Batista Neto",
+    "email": "gerald.crona@ebert-quigley.com",
+    "birthdate": "2001-03-11",
+    "address": "165 Rua Rafaela",
+    "city": "Ituverava",
+    "state": "Alagoas"
+  },
+  "doctor": {
+    "crm": "B000BJ20J4",
+    "crm_state": "PI",
+    "name": "Maria Luiza Pires",
+    "email": "denna@wisozk.biz"
+  },
+  "exams": [
+    {
+      "type": "hemácias",
+      "limits": "45-52",
+      "result": "97"
+    },
+    {
+      "type": "leucócitos",
+      "limits": "9-61",
+      "result": "89"
+    },
+    {
+      "type": "plaquetas",
+      "limits": "11-93",
+      "result": "97"
+    },
+    {
+      "type": "hdl",
+      "limits": "19-75",
+      "result": "0"
+    }
+  ]
+}
+```
 
 ## Dependencies
 
@@ -161,6 +208,8 @@ docker compose up --build app
 ```
 
 Now you can access the application through http://localhost:3000/ route.
+
+You can change the route on `HOST` environment variable on docker compose file.
 
 ### Populating the Database
 
@@ -239,7 +288,7 @@ This is automatically installed when you start up Docker container or run Bundle
 
 ## How to Run Tests
 
-This project was made using Test Driven Development.
+This project was made using Test Driven Development and uses RSpec for request and unit tests and [**Cypress**](https://www.cypress.io/) for system tests.
 
 It's recommended to run tests inside test containers for application and database on Docker. To do it you just need to run:
 
@@ -247,10 +296,22 @@ It's recommended to run tests inside test containers for application and databas
 docker compose up --build test_app
 ```
 
-Now you can run all the tests with:
+Now you can run all the request and unit tests with:
 
 ```
 rspec
+```
+
+For the system tests, the Cypress runs on a separated container from the RSpec, you can run these tests with:
+
+```
+docker compose up --build cypress
+```
+
+When running it very often, you may come across the max depth exceeded error, you can solve it cleaning your docker image list removing dangling images with:
+
+```
+docker image prune
 ```
 
 ## Entity-Relationship Diagram

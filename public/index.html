@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Exames Médicos</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <h1>Lista de Exames Médicos</h1>
+    <nav id="nav-controls">
+      <div id="token-input">
+        <input type="text" id="token" placeholder="Insira o token do exame">
+        <button id="fetch-token">Buscar</button>
+      </div>
+      <div id="pagination-controls">
+        <button id="prev-button">Anterior</button>
+        <span id="page-info"></span>
+        <button id="next-button">Próximo</button>
+      </div>
+    </nav>
+  </header>
+  
+  <main id="data-container"></main>
+  
+  <section id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </section>
+  
+  <script src="../script.js"></script>
+</body>
+</html>

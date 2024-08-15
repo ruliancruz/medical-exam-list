@@ -1,6 +1,6 @@
 require 'rack/test'
 require './server'
-require './app/services/database_table_manager'
+require './app/services/database/database_table_manager'
 require './app/services/csv_importer'
 
 RSpec.describe 'Server' do
@@ -19,10 +19,9 @@ RSpec.describe 'Server' do
       get '/tests'
 
       expect(last_response).to be_ok
-
       json = JSON.parse last_response.body
-
       expect(json.length).to eq 2
+
       expect(json.first['token']).to eq 'IQCZ17'
       expect(json.first['date']).to eq '2021-08-05'
       expect(json.first['patient']['cpf']).to eq '048.973.170-88'
@@ -38,10 +37,16 @@ RSpec.describe 'Server' do
       expect(json.first['exams'].last['type']).to eq 'plaquetas'
       expect(json.first['exams'].last['limits']).to eq '11-93'
       expect(json.first['exams'].last['result']).to eq '97'
+
       expect(json.last['token']).to eq '0W9I67'
       expect(json.last['patient']['cpf']).to eq '048.108.026-04'
       expect(json.last['doctor']['crm']).to eq 'B0002IQM66'
       expect(json.last['exams'].first['result']).to eq '28'
+
+      expect(json.first['patient']).not_to have_key 'address'
+      expect(json.first['patient']).not_to have_key 'city'
+      expect(json.first['patient']).not_to have_key 'state'
+      expect(json.first['doctor']).not_to have_key 'email'
     end
 
     it 'returns a empty array if database has no registered test' do
@@ -77,9 +82,71 @@ RSpec.describe 'Server' do
     end
   end
 
-  context 'GET /exams' do
+  context 'GET /tests/:token' do
+    it 'returns exam details for the given token' do
+      DatabaseTableManager.drop_all
+      DatabaseTableManager.migrate
+      CSVImporter.import_to_database './spec/fixtures/data.csv'
+
+      get '/tests/0W9I67'
+
+      expect(last_response).to be_ok
+      json = JSON.parse last_response.body
+      expect(json['token']).to eq '0W9I67'
+      expect(json['date']).to eq '2021-07-09'
+      expect(json['patient']['cpf']).to eq '048.108.026-04'
+      expect(json['patient']['name']).to eq 'Juliana dos Reis Filho'
+      expect(json['patient']['email']).to eq 'mariana_crist@kutch-torp.com'
+      expect(json['patient']['birthdate']).to eq '1995-07-03'
+      expect(json['patient']['address']).to eq '527 Rodovia Júlio'
+      expect(json['patient']['city']).to eq 'Lagoa da Canoa'
+      expect(json['patient']['state']).to eq 'Paraíba'
+      expect(json['doctor']['crm']).to eq 'B0002IQM66'
+      expect(json['doctor']['crm_state']).to eq 'SC'
+      expect(json['doctor']['name']).to eq 'Maria Helena Ramalho'
+      expect(json['doctor']['email']).to eq 'rayford@kemmer-kunze.info'
+      expect(json['exams'].first['type']).to eq 'hemácias'
+      expect(json['exams'].first['limits']).to eq '45-52'
+      expect(json['exams'].first['result']).to eq '28'
+    end
+
+    it 'returns not found error if the token is not registered' do
+      DatabaseTableManager.drop_all
+      DatabaseTableManager.migrate
+
+      get '/tests/RUBY42'
+
+      expect(last_response).to be_not_found
+      expect(JSON.parse(last_response.body)['error'])
+        .to eq 'No exam with token RUBY42 found'
+    end
+
+    it 'returns a error message if database is not migrated' do
+      DatabaseTableManager.drop_all
+
+      get '/tests/0W9I67'
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database table not found'
+    end
+
+    it 'returns a error message if it fails to connect to the database' do
+      allow(DatabaseConnectionManager)
+        .to receive(:use_connection)
+        .and_raise PG::ConnectionBad
+
+      get '/tests/0W9I67'
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database connection failure'
+    end
+  end
+
+  context 'GET /' do
     it 'returns a exam list html page' do
-      get '/exams'
+      get '/'
 
       expect(last_response).to be_ok
       expect(last_response.content_type).to include 'text/html'

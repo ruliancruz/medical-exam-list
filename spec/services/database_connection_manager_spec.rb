@@ -1,5 +1,5 @@
 require 'pg'
-require './app/services/database_connection_manager'
+require './app/services/database/database_connection_manager'
 
 RSpec.describe DatabaseConnectionManager do
   before(:each) { DatabaseConnectionManager.reset_pool }
