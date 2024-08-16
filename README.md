@@ -219,6 +219,8 @@ This application was made to run with [**Docker**](https://www.docker.com/), and
 
 :warning: [PostgreSQL 16.4](https://www.postgresql.org/)
 
+:warning: [Redis 7.4.0](https://redis.io/)
+
 :warning: [Node.js](https://nodejs.org/)
 
 :warning: [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/)
