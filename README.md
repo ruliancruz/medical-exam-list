@@ -44,11 +44,6 @@
 
 :heavy_check_mark: Import data from CSV files to database
 
-### Application Homepage Images
-![image](https://github.com/user-attachments/assets/c8d42aa6-3aa4-4ebd-b3b4-58be01d34f05)
-
-![image](https://github.com/user-attachments/assets/d2b97dbd-8a65-4830-bccd-26e73a8fa4ed)
-
 ## API Endpoints
 
 ### Exam List Endpoint
