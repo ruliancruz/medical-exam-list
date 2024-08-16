@@ -2,6 +2,7 @@ require 'sinatra'
 require 'rack/handler/puma'
 require './helpers/host_helper'
 require './app/services/exam_service'
+require './app/services/csv_importer'
 
 get '/' do
   content_type :html
@@ -34,15 +35,15 @@ rescue PG::ConnectionBad
 end
 
 post '/import' do
-  if CSVImporter.import_to_database params[:csv]
+  unless CSVImporter.import_to_database(request.body.read)
     content_type :json
-    status :created
-    return { message: 'CSV imported to database' }.to_json
+    status :bad_request
+    return { error: 'The CSV file is not in the correct format' }.to_json
   end
 
   content_type :json
-  status :bad_request
-  { error: 'The CSV file is not in the correct format' }.to_json
+  status :created
+  return { message: 'CSV imported to database' }.to_json
 rescue PG::UndefinedTable
   status :service_unavailable
   { error: 'Database table not found, there are migrations pending' }.to_json

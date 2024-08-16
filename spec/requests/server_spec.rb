@@ -161,8 +161,9 @@ RSpec.describe 'Server' do
       DatabaseTableManager.migrate
       csv = File.read './spec/fixtures/post_data.csv'
 
-      post '/import', csv: csv
-      all_exams = JSON.parse ExamService.all_as_json
+      post '/import', csv, { 'CONTENT_TYPE' => 'text/csv' }
+      all_exams = JSON.parse(ExamService.all_as_json)
+      #puts all_exams.inspect
 
       expect(last_response.status).to eq 201
       expect(last_response.content_type).to eq 'application/json'
@@ -190,7 +191,7 @@ RSpec.describe 'Server' do
       DatabaseTableManager.drop_all
       csv = File.read './spec/fixtures/post_data.csv'
 
-      post '/import', csv: csv
+      post '/import', csv, { 'CONTENT_TYPE' => 'text/csv' }
 
       expect(last_response.status).to eq 503
       expect(JSON.parse(last_response.body)['error'])
@@ -203,7 +204,7 @@ RSpec.describe 'Server' do
         .to receive(:use_connection)
         .and_raise PG::ConnectionBad
 
-      post '/import', csv: csv
+      post '/import', csv, { 'CONTENT_TYPE' => 'text/csv' }
 
       expect(last_response.status).to eq 503
       expect(JSON.parse(last_response.body)['error'])
@@ -215,7 +216,7 @@ RSpec.describe 'Server' do
       DatabaseTableManager.migrate
       csv = File.read './spec/fixtures/invalid_post_data.csv'
 
-      post '/import', csv: csv
+      post '/import', csv, { 'CONTENT_TYPE' => 'text/csv' }
 
       expect(last_response.status).to eq 400
       expect(JSON.parse(last_response.body)['error'])
