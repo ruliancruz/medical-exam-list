@@ -9,7 +9,7 @@ class CSVImportWorker
     Tempfile.create(['data', '.csv']) do |temporary_file|
       temporary_file.write(csv_content)
       temporary_file.rewind
-      puts CSVImporter.import_to_database temporary_file.read == true
+      CSVImporter.import_to_database temporary_file.read
     end
   end
 end
