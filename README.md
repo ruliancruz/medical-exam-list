@@ -283,7 +283,7 @@ The `rake db:import_from_csv` works running the other 3 tasks together.
 
 #### Background Jobs Dashboard
 
-This application uses [Sidekiq](https://github.com/sidekiq/sidekiq) for background jobs to import CSV files. If you want to use it's dashboard, just access `/sidekiq` page and enter the sidekiq credentials to see it.
+This application uses [**Sidekiq**](https://github.com/sidekiq/sidekiq) for background jobs to import CSV files. If you want to use it's dashboard, just access `/sidekiq` page and enter the sidekiq credentials to see it.
 
 You can change the credentials on `docker-compose.yml` on app container:
 
@@ -344,7 +344,7 @@ This is automatically installed when you start up Docker container or run Bundle
 
 ## How to Run Tests
 
-This project was made using Test Driven Development and uses RSpec for request and unit tests and [**Cypress**](https://www.cypress.io/) for system tests.
+This project uses [**RSpec**](https://rspec.info/) for request and unit tests and [**Cypress**](https://www.cypress.io/) for system tests.
 
 It's recommended to run tests inside test containers for application and database on Docker. To do it you just need to run:
 
