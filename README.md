@@ -44,6 +44,8 @@
 
 :heavy_check_mark: Import data from CSV files to database
 
+:heavy_check_mark: Show background jobs dashboard
+
 ## API Endpoints
 
 ### Exam List Endpoint
@@ -272,9 +274,21 @@ rake db:import
 
 The `rake db:import_from_csv` works running the other 3 tasks together.
 
+#### Background Jobs Dashboard
+
+This application uses [Sidekiq](https://github.com/sidekiq/sidekiq) for background jobs to import CSV files. If you want to use it's dashboard, just access `/sidekiq` page and enter the sidekiq credentials to see it.
+
+You can change the credentials on docker compose file on app container:
+
+```env
+SIDEKIQ_USERNAME: sidekiq
+SIDEKIQ_PASSWORD: sidekiq123
+```
+
 ### Database Settings
 
 For better security, I recommend you to change the default database credentials when using the application, you can do it change the environment variable values used on Docker on `.env` file:
+
 ```env
 POSTGRES_USER=your_user
 POSTGRES_PASSWORD=your_password
@@ -313,6 +327,8 @@ This is automatically installed when you start up Docker container or run Bundle
 
 :gem: [SimpleCov](https://github.com/simplecov-ruby/simplecov)
 
+:gem: [Sidekiq](https://github.com/sidekiq/sidekiq)
+
 :gem: [Sinatra](https://github.com/sinatra/sinatra)
 
 ## How to Run Tests
@@ -337,10 +353,14 @@ For the system tests, the Cypress runs on a separated container from the RSpec, 
 docker compose up --build cypress
 ```
 
-When running it very often, you may come across the max depth exceeded error, you can solve it cleaning your docker image list removing dangling images with:
+When running it very often, you may come across the max depth exceeded error, you can solve it cleaning your docker image list, so if it happens try to run these commands:
 
 ```
 docker image prune
+```
+
+```
+docker rmi -f $(docker images -q)
 ```
 
 ## Entity-Relationship Diagram
