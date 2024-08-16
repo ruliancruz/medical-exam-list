@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/static/v1?label=redis&message=7.4.0&color=red&style=for-the-badge&logo=redis&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=cypress&message=13.3.3&color=GREEN&style=for-the-badge&logo=cypress&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=test%20coverage&message=95.29%&color=green&style=for-the-badge"/>
-    <img src="https://img.shields.io/static/v1?label=tests&message=244&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=tests&message=24&color=green&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
   </div><br>
