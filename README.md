@@ -5,6 +5,7 @@
     <img src="https://img.shields.io/static/v1?label=sinatra&message=4.0&color=red&style=for-the-badge&logo=redhat"/>
     <img src="https://img.shields.io/static/v1?label=javascript&message=es6&color=yellow&style=for-the-badge&logo=javascript"/>
     <img src="https://img.shields.io/static/v1?label=postgresql&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
+    <img src="https://img.shields.io/static/v1?label=redis&message=7.4.0&color=red&style=for-the-badge&logo=redis&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=cypress&message=13.3.3&color=GREEN&style=for-the-badge&logo=cypress&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=test%20coverage&message=95.29%&color=green&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=tests&message=244&color=green&style=for-the-badge"/>
@@ -321,6 +322,8 @@ This is automatically installed when you start up Docker container or run Bundle
 
 :gem: [Rack Test](https://github.com/rack/rack-test)
 
+:gem: [Redis](https://github.com/redis/redis-rb)
+
 :gem: [RSpec](https://github.com/rspec/rspec-metagem)
 
 :gem: [RuboCop](https://github.com/rubocop/rubocop)
@@ -330,6 +333,8 @@ This is automatically installed when you start up Docker container or run Bundle
 :gem: [Sidekiq](https://github.com/sidekiq/sidekiq)
 
 :gem: [Sinatra](https://github.com/sinatra/sinatra)
+
+:gem: [Tempfile](https://github.com/ruby/tempfile)
 
 ## How to Run Tests
 
