@@ -16,8 +16,12 @@ services:
       DB_POOL_SIZE: 5
       DB_TIMEOUT: 5
       HOST: http://app:3000
+      SIDEKIQ_USERNAME: sidekiq
+      SIDEKIQ_PASSWORD: sidekiq123
+      RACK_ENV: development
     depends_on:
       - db
+      - redis
 
   test_app:
     build:
@@ -43,6 +47,8 @@ services:
   db:
     image: postgres:${POSTGRES_VERSION}
     container_name: database
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -75,6 +81,31 @@ services:
       - app
     environment:
       - CYPRESS_baseUrl=http://app:3000
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq -r ./app/workers/csv_import_worker.rb
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+      - redis
+      - db
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgres://manager:pass123@db:5432/maindb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+
+  redis:
+    image: redis:7.4.0
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
 volumes:
   medical_exam_list_data:

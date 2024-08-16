@@ -6,8 +6,8 @@
     <img src="https://img.shields.io/static/v1?label=javascript&message=es6&color=yellow&style=for-the-badge&logo=javascript"/>
     <img src="https://img.shields.io/static/v1?label=postgresql&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=cypress&message=13.3.3&color=GREEN&style=for-the-badge&logo=cypress&logoColor=white"/>
-    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=98.81%&color=green&style=for-the-badge"/>
-    <img src="https://img.shields.io/static/v1?label=tests&message=25&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=95.29%&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=tests&message=244&color=green&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
   </div><br>
@@ -206,16 +206,6 @@ You need to follow this CSV headers:
 
 ```
 cpf;nome paciente;email paciente;data nascimento paciente;endereço/rua paciente;cidade paciente;estado patiente;crm médico;crm médico estado;nome médico;email médico;token resultado exame;data exame;tipo exame;limites tipo exame;resultado tipo exame
-```
-
-Otherwise the application will return bad request.
-
-Bad Request Response Example:
-
-```json
-{
-  "error": "The CSV file is not in the correct format"
-}
 ```
 
 ## Dependencies
