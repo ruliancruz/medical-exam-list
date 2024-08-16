@@ -49,7 +49,8 @@
 
 ### Application Homepage Image
 
-![image](https://github.com/user-attachments/assets/798d6ca3-5c6a-403c-aabe-217d97c8a4ee)
+![image](https://github.com/user-attachments/assets/001148a0-80c6-4d67-bd36-a33bc72edd80)
+
 
 ## API Endpoints
 
