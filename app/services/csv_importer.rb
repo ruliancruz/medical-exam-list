@@ -25,16 +25,10 @@ EXPECTED_HEADERS = [
 class CSVImporter
   class << self
     def import_to_database(csv)
-      csv_lines = CSV.parse csv, headers: true, col_sep: COLUMN_SEPARATOR,
-                                 encoding: 'UTF-8'
-      return false if csv_lines.headers != EXPECTED_HEADERS
-
       CSV.parse(csv, headers: true, col_sep: COLUMN_SEPARATOR,
                      encoding: 'UTF-8') do |row|
         save_row row
       end
-
-      true
     end
 
     private

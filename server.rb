@@ -1,8 +1,39 @@
 require 'sinatra'
+require 'securerandom'
+require 'sidekiq/web'
+require 'rack-protection'
 require 'rack/handler/puma'
 require './helpers/host_helper'
 require './app/services/exam_service'
 require './app/services/csv_importer'
+require './app/workers/csv_import_worker'
+
+Sidekiq.configure_server do |config|
+  config.redis = { url: 'redis://redis:6379/0' }
+end
+
+Sidekiq.configure_client do |config|
+  config.redis = { url: 'redis://redis:6379/0' }
+end
+
+use Rack::Session::Cookie,
+    key: 'rack.session',
+    secret: SecureRandom.hex(64),
+    same_site: true
+
+Sidekiq::Web.use Rack::Auth::Basic, 'Protected Area' do |username, password|
+  username == ENV['SIDEKIQ_USERNAME'] && password == ENV['SIDEKIQ_PASSWORD']
+end
+
+class SidekiqApp < Sinatra::Base
+  use Sidekiq::Web
+end
+
+use Rack::Builder do
+  map '/sidekiq' do
+    run Sidekiq::Web
+  end
+end
 
 get '/' do
   content_type :html
@@ -35,10 +66,10 @@ rescue PG::ConnectionBad
 end
 
 post '/import' do
-  unless CSVImporter.import_to_database(request.body.read)
-    content_type :json
-    status :bad_request
-    return { error: 'The CSV file is not in the correct format' }.to_json
+  if ENV['RACK_ENV'] == 'test'
+    CSVImporter.import_to_database request.body.read
+  else
+    CSVImportWorker.perform_async request.body.read
   end
 
   content_type :json

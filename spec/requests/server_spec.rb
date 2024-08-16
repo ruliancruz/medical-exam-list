@@ -163,7 +163,6 @@ RSpec.describe 'Server' do
 
       post '/import', csv, { 'CONTENT_TYPE' => 'text/csv' }
       all_exams = JSON.parse(ExamService.all_as_json)
-      # puts all_exams.inspect
 
       expect(last_response.status).to eq 201
       expect(last_response.content_type).to eq 'application/json'
@@ -209,18 +208,6 @@ RSpec.describe 'Server' do
       expect(last_response.status).to eq 503
       expect(JSON.parse(last_response.body)['error'])
         .to include 'Database connection failure'
-    end
-
-    it 'returns a error message if the csv is not on correct format' do
-      DatabaseTableManager.drop_all
-      DatabaseTableManager.migrate
-      csv = File.read './spec/fixtures/invalid_post_data.csv'
-
-      post '/import', csv, { 'CONTENT_TYPE' => 'text/csv' }
-
-      expect(last_response.status).to eq 400
-      expect(JSON.parse(last_response.body)['error'])
-        .to include 'The CSV file is not in the correct format'
     end
   end
 end
