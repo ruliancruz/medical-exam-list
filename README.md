@@ -250,7 +250,7 @@ To drop and populate the application's database data from the default `.csv` fil
 rake db:import_from_csv
 ```
 
-You can change de default `.csv` path on DEFAULT_PATH constant on: `app/services/csv_importer.rb`
+You can change de default `.csv` path on CSV_PATH constant on: `Rakefile`
 
 #### Alternatively you can run the tasks separately
 
@@ -278,7 +278,7 @@ The `rake db:import_from_csv` works running the other 3 tasks together.
 
 This application uses [Sidekiq](https://github.com/sidekiq/sidekiq) for background jobs to import CSV files. If you want to use it's dashboard, just access `/sidekiq` page and enter the sidekiq credentials to see it.
 
-You can change the credentials on docker compose file on app container:
+You can change the credentials on `docker-compose.yml` on app container:
 
 ```env
 SIDEKIQ_USERNAME: sidekiq
