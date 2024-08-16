@@ -47,6 +47,10 @@
 
 :heavy_check_mark: Show background jobs dashboard
 
+### Application Homepage Image
+
+![image](https://github.com/user-attachments/assets/798d6ca3-5c6a-403c-aabe-217d97c8a4ee)
+
 ## API Endpoints
 
 ### Exam List Endpoint
