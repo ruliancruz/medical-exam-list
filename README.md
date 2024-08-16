@@ -6,8 +6,8 @@
     <img src="https://img.shields.io/static/v1?label=javascript&message=es6&color=yellow&style=for-the-badge&logo=javascript"/>
     <img src="https://img.shields.io/static/v1?label=postgresql&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=cypress&message=13.3.3&color=GREEN&style=for-the-badge&logo=cypress&logoColor=white"/>
-    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=98.68%&color=green&style=for-the-badge"/>
-    <img src="https://img.shields.io/static/v1?label=tests&message=21&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=98.81%&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=tests&message=25&color=green&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
   </div><br>
@@ -177,6 +177,44 @@ Response Example:
       "result": "0"
     }
   ]
+}
+```
+
+### CSV Import Endpoint
+
+`POST /import`
+
+Import CSV content from the request body to the database.
+
+Request Example:
+```
+cpf;nome paciente;email paciente;data nascimento paciente;endereço/rua paciente;cidade paciente;estado patiente;crm médico;crm médico estado;nome médico;email médico;token resultado exame;data exame;tipo exame;limites tipo exame;resultado tipo exame
+066.126.400-90;Matheus Barroso;maricela@streich.com;1972-03-09;9378 Rua Stella Braga;Senador Elói de Souza;Pernambuco;B000AR99QO;MS;Oliver Palmeira;lawana.erdman@waters.info;YPV4AD;2021-08-12;ácido úrico;15-61;64
+094.010.477-66;Meire Paes;billie@ratke.co;1981-06-24;7187 Rua Mariah;Rio Negro;Roraima;B00067668W;RS;Félix Garcês;letty@herzog.name;O0RP5W;2021-04-08;hemácias;45-52;47
+094.010.477-66;Meire Paes;billie@ratke.co;1981-06-24;7187 Rua Mariah;Rio Negro;Roraima;B00067668W;RS;Félix Garcês;letty@herzog.name;O0RP5W;2021-04-08;leucócitos;9-61;51
+```
+
+Response Example:
+
+```json
+{
+  "message": "CSV imported to database"
+}
+```
+
+You need to follow this CSV headers:
+
+```
+cpf;nome paciente;email paciente;data nascimento paciente;endereço/rua paciente;cidade paciente;estado patiente;crm médico;crm médico estado;nome médico;email médico;token resultado exame;data exame;tipo exame;limites tipo exame;resultado tipo exame
+```
+
+Otherwise the application will return bad request.
+
+Bad Request Response Example:
+
+```json
+{
+  "error": "The CSV file is not in the correct format"
 }
 ```
 

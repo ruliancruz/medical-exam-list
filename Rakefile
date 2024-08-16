@@ -1,6 +1,8 @@
 require './app/services/database/database_table_manager'
 require './app/services/csv_importer'
 
+CSV_PATH = './storage/data.csv'.freeze
+
 namespace :db do
   task :drop do
     DatabaseTableManager.drop_all
@@ -15,7 +17,7 @@ namespace :db do
 
   task :import do
     puts 'Importing CSV...'
-    CSVImporter.import_to_database
+    CSVImporter.import_to_database File.read CSV_PATH
     puts 'CSV imported to database'
   end
 
