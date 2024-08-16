@@ -2,6 +2,7 @@ require 'rack/test'
 require './server'
 require './app/services/database/database_table_manager'
 require './app/services/csv_importer'
+require './app/services/exam_service'
 
 RSpec.describe 'Server' do
   include Rack::Test::Methods
@@ -14,7 +15,7 @@ RSpec.describe 'Server' do
     it 'returns a test list' do
       DatabaseTableManager.drop_all
       DatabaseTableManager.migrate
-      CSVImporter.import_to_database './spec/fixtures/data.csv'
+      CSVImporter.import_to_database File.read './spec/fixtures/data.csv'
 
       get '/tests'
 
@@ -86,7 +87,7 @@ RSpec.describe 'Server' do
     it 'returns exam details for the given token' do
       DatabaseTableManager.drop_all
       DatabaseTableManager.migrate
-      CSVImporter.import_to_database './spec/fixtures/data.csv'
+      CSVImporter.import_to_database File.read './spec/fixtures/data.csv'
 
       get '/tests/0W9I67'
 
@@ -151,6 +152,74 @@ RSpec.describe 'Server' do
       expect(last_response).to be_ok
       expect(last_response.content_type).to include 'text/html'
       expect(last_response.body).to include 'Lista de Exames Médicos'
+    end
+  end
+
+  context 'POST /import' do
+    it 'successfully imports a csv file to the database' do
+      DatabaseTableManager.drop_all
+      DatabaseTableManager.migrate
+      csv = File.read './spec/fixtures/post_data.csv'
+
+      post '/import', csv: csv
+      all_exams = JSON.parse ExamService.all_as_json
+
+      expect(last_response.status).to eq 201
+      expect(last_response.content_type).to eq 'application/json'
+      response_body = JSON.parse last_response.body
+      expect(response_body['message']).to eq 'CSV imported to database'
+      expect(all_exams.length).to eq 2
+      expect(all_exams.last['token']).to eq 'O0RP5W'
+      expect(all_exams.last['date']).to eq '2021-04-08'
+      expect(all_exams.last['patient']['cpf']).to eq '094.010.477-66'
+      expect(all_exams.last['patient']['name']).to eq 'Meire Paes'
+      expect(all_exams.last['patient']['email']).to eq 'billie@ratke.co'
+      expect(all_exams.last['patient']['birthdate']).to eq '1981-06-24'
+      expect(all_exams.last['doctor']['crm']).to eq 'B00067668W'
+      expect(all_exams.last['doctor']['crm_state']).to eq 'RS'
+      expect(all_exams.last['doctor']['name']).to eq 'Félix Garcês'
+      expect(all_exams.last['exams'].first['type']).to eq 'hemácias'
+      expect(all_exams.last['exams'].first['limits']).to eq '45-52'
+      expect(all_exams.last['exams'].first['result']).to eq '47'
+      expect(all_exams.last['exams'].last['result']).to eq '51'
+      expect(all_exams.first['token']).to eq 'YPV4AD'
+      expect(all_exams.first['patient']['cpf']).to eq '066.126.400-90'
+    end
+
+    it 'returns a error message if database is not migrated' do
+      DatabaseTableManager.drop_all
+      csv = File.read './spec/fixtures/post_data.csv'
+
+      post '/import', csv: csv
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database table not found'
+    end
+
+    it 'returns a error message if it fails to connect to the database' do
+      csv = File.read './spec/fixtures/post_data.csv'
+      allow(DatabaseConnectionManager)
+        .to receive(:use_connection)
+        .and_raise PG::ConnectionBad
+
+      post '/import', csv: csv
+
+      expect(last_response.status).to eq 503
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'Database connection failure'
+    end
+
+    it 'returns a error message if the csv is not on correct format' do
+      DatabaseTableManager.drop_all
+      DatabaseTableManager.migrate
+      csv = File.read './spec/fixtures/invalid_post_data.csv'
+
+      post '/import', csv: csv
+
+      expect(last_response.status).to eq 400
+      expect(JSON.parse(last_response.body)['error'])
+        .to include 'The CSV file is not in the correct format'
     end
   end
 end

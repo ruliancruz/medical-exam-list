@@ -3,14 +3,17 @@ require 'rack/handler/puma'
 require './helpers/host_helper'
 require './app/services/exam_service'
 
+get '/' do
+  content_type :html
+  HostHelper.insert_host File.read('public/index.html'), request.host
+end
+
 get '/tests' do
   content_type :json
   ExamService.all_as_json
 rescue PG::UndefinedTable
   status :service_unavailable
-  {
-    error: 'Database table not found, run rake db:import_from_csv to set it up'
-  }.to_json
+  { error: 'Database table not found, there are migrations pending' }.to_json
 rescue PG::ConnectionBad
   status :service_unavailable
   { error: 'Database connection failure' }.to_json
@@ -24,17 +27,28 @@ get '/tests/:token' do
   response
 rescue PG::UndefinedTable
   status :service_unavailable
-  {
-    error: 'Database table not found, run rake db:import_from_csv to set it up'
-  }.to_json
+  { error: 'Database table not found, there are migrations pending' }.to_json
 rescue PG::ConnectionBad
   status :service_unavailable
   { error: 'Database connection failure' }.to_json
 end
 
-get '/' do
-  content_type :html
-  HostHelper.insert_host File.read('public/index.html'), request.host
+post '/import' do
+  if CSVImporter.import_to_database params[:csv]
+    content_type :json
+    status :created
+    return { message: 'CSV imported to database' }.to_json
+  end
+
+  content_type :json
+  status :bad_request
+  { error: 'The CSV file is not in the correct format' }.to_json
+rescue PG::UndefinedTable
+  status :service_unavailable
+  { error: 'Database table not found, there are migrations pending' }.to_json
+rescue PG::ConnectionBad
+  status :service_unavailable
+  { error: 'Database connection failure' }.to_json
 end
 
 unless ENV['RACK_ENV'] == 'test'

@@ -2,14 +2,42 @@ require 'csv'
 require './app/services/database/database_connection_manager'
 
 COLUMN_SEPARATOR = ';'.freeze
-DEFAULT_PATH = './storage/data.csv'.freeze
+
+EXPECTED_HEADERS = [
+  'cpf',
+  'nome paciente',
+  'email paciente',
+  'data nascimento paciente',
+  'endereço/rua paciente',
+  'cidade paciente',
+  'estado patiente',
+  'crm médico',
+  'crm médico estado',
+  'nome médico',
+  'email médico',
+  'token resultado exame',
+  'data exame',
+  'tipo exame',
+  'limites tipo exame',
+  'resultado tipo exame'
+].freeze
 
 class CSVImporter
   class << self
-    def import_to_database(csv_path = DEFAULT_PATH)
+    def import_to_database(csv)
+      csv_lines = CSV.parse csv, headers: true, col_sep: COLUMN_SEPARATOR
+      return false if csv_lines.headers != EXPECTED_HEADERS
+
+      save_to_database csv
+      true
+    end
+
+    private
+
+    def save_to_database(csv)
       connection = DatabaseConnectionManager.use_connection
 
-      CSV.foreach(csv_path, headers: true, col_sep: COLUMN_SEPARATOR) do |row|
+      CSV.parse(csv, headers: true, col_sep: COLUMN_SEPARATOR) do |row|
         patient_id = find_or_create_patient connection, patient_data(row)
         doctor_id = find_or_create_doctor connection, doctor_data(row)
 
@@ -21,8 +49,6 @@ class CSVImporter
         create_exam connection, exam_data(row, request_id)
       end
     end
-
-    private
 
     def exam_data(row, request_id)
       {
