@@ -249,7 +249,7 @@ docker compose up --build up
 It will start test containers too, if want only the main application, run it instead:
 
 ```
-docker compose up --build up
+docker compose up --build sidekiq
 ```
 
 Now you can access the application through http://localhost:3000/ route.
