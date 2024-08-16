@@ -8,7 +8,7 @@ gem 'rack-test'
 gem 'redis'
 gem 'rspec'
 gem 'rubocop', require: false
-gem 'simplecov', require: false
 gem 'sidekiq'
+gem 'simplecov', require: false
 gem 'sinatra'
 gem 'tempfile'
