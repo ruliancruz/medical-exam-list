@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal');
   const modalBody = document.getElementById('modal-body');
   const closeButton = document.querySelector('.close-button');
+  const fileInput = document.getElementById('file-input');
+  const uploadButton = document.getElementById('upload-button');
 
   function renderPage(page) {
     const start = (page - 1) * itemsPerPage;
@@ -158,6 +160,36 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
+  async function uploadCSV(file) {
+    try {
+      const reader = new FileReader();
+
+      reader.onload = async function(event) {
+        const csvContent = event.target.result;
+
+        const response = await fetch(`${host}/import`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: csvContent,
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        alert('Arquivo CSV enviado com sucesso!');
+        fetchData();
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      console.error('Error uploading CSV:', error);
+      alert('Falha ao enviar o arquivo CSV.');
+    }
+  }
+
   prevButton.addEventListener('click', () => {
     if (currentPage > 1) {
       currentPage--;
@@ -169,6 +201,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentPage < Math.ceil(examsData.length / itemsPerPage)) {
       currentPage++;
       renderPage(currentPage);
+    }
+  });
+
+  uploadButton.addEventListener('click', () => {
+    const file = fileInput.files[0];
+    if (file) {
+      uploadCSV(file);
+    } else {
+      alert('Por favor, selecione um arquivo CSV.');
     }
   });
 

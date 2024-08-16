@@ -4,7 +4,7 @@ body {
   margin: 20px;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
 }
 
@@ -49,6 +49,23 @@ button {
 
 #token-input button {
   padding: 10px 20px;
+  cursor: pointer;
+}
+
+#upload-csv {
+  text-align: center;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  width: 800px;
+  padding-bottom: 20px;
+  box-shadow: 1px 1px 5px 1px rgba(100, 100, 100, 0.1);
+}
+
+#file-input {
+  margin-right: 10px;
+}
+
+#upload-button {
   cursor: pointer;
 }
 
@@ -132,4 +149,12 @@ button {
 
 .mb-2 {
   margin-bottom: 20px;
+}
+
+.mb-3 {
+  margin-bottom: 30px;
+}
+
+.mt-5 {
+  margin-top: 50px;
 }
