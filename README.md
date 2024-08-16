@@ -370,6 +370,8 @@ When running it very often, you may come across the max depth exceeded error, yo
 docker image prune
 ```
 
+Or:
+
 ```
 docker rmi -f $(docker images -q)
 ```
