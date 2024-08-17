@@ -25,17 +25,17 @@ EXPECTED_HEADERS = [
 class CSVImporter
   class << self
     def import_to_database(csv)
-      CSV.parse(csv, headers: true, col_sep: COLUMN_SEPARATOR,
-                     encoding: 'UTF-8') do |row|
-        save_row row
+      DatabaseConnectionManager.use_connection do |connection|
+        CSV.parse(csv, headers: true, col_sep: COLUMN_SEPARATOR,
+                       encoding: 'UTF-8') do |row|
+          save_row connection, row
+        end
       end
     end
 
     private
 
-    def save_row(row)
-      connection = DatabaseConnectionManager.use_connection
-
+    def save_row(connection, row)
       patient_id = find_or_create_patient connection, patient_data(row)
       doctor_id = find_or_create_doctor connection, doctor_data(row)
 

@@ -117,13 +117,17 @@ describe('Home Page', () => {
   });
 
   it('loads an exam detail from a given token', function () {
-    cy.intercept('GET', '**/tests', { body: this.testData })
+    cy.intercept('GET', '**/tests', { body: this.threeTestsData })
       .as('getTests');
 
+    cy.intercept('GET', '**/tests/*', { body: this.testData })
+      .as('getTest');
+      
     cy.visit('/');
     cy.wait('@getTests');
     cy.get('#token').type('IQCZ17');
     cy.get('#fetch-token').click();
+    cy.wait('@getTest');
 
     cy.get('#modal-body').within(() => {
       cy.contains('IQCZ17');

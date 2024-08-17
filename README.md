@@ -243,7 +243,7 @@ git clone https://github.com/ruliancruz/medical-exam-list.git
 After that, all you need to do to run the application is starting Docker containers from application:
 
 ```
-docker compose up --build up
+docker compose up --build
 ```
 
 It will start test containers too, if want only the main application, run it instead:

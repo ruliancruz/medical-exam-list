@@ -6,14 +6,16 @@ MIGRATIONS_PATH = './database/migrations/*.sql'.freeze
 class DatabaseTableManager
   class << self
     def drop_all
-      DatabaseConnectionManager.use_connection.exec File.read DROP_SCRIPT_PATH
+      DatabaseConnectionManager.use_connection do |connection|
+        connection.exec File.read DROP_SCRIPT_PATH
+      end
     end
 
     def migrate
-      connection = DatabaseConnectionManager.use_connection
-
-      Dir.glob(MIGRATIONS_PATH).sort.each do |sql_file|
-        connection.exec File.read sql_file
+      DatabaseConnectionManager.use_connection do |connection|
+        Dir.glob(MIGRATIONS_PATH).sort.each do |sql_file|
+          connection.exec File.read sql_file
+        end
       end
     end
   end
