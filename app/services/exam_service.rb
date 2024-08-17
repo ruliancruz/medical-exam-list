@@ -7,18 +7,23 @@ REQUEST_BY_TOKEN_SQL = './database/scripts/select_request_by_token.sql'.freeze
 class ExamService
   class << self
     def all_as_json
-      rows = DatabaseConnectionManager
-             .use_connection
-             .exec File.read ALL_EXAMS_SQL
+      rows = []
+
+      DatabaseConnectionManager.use_connection do |connection|
+        rows = connection.exec File.read ALL_EXAMS_SQL
+      end
 
       requests = RequestMapper.map_requests rows
       requests.values.to_json
     end
 
     def find_by_token(token)
-      result = DatabaseConnectionManager
-               .use_connection
-               .exec_params File.read(REQUEST_BY_TOKEN_SQL), [token]
+      result = nil
+
+      DatabaseConnectionManager.use_connection do |connection|
+        request_script = File.read REQUEST_BY_TOKEN_SQL
+        result = connection.exec_params request_script, [token]
+      end
 
       return token_not_found_message token if result.ntuples.zero?
 

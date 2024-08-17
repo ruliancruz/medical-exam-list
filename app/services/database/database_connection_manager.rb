@@ -5,8 +5,12 @@ class DatabaseConnectionManager
   class << self
     def use_connection
       pool.with do |connection|
+        connection.exec('BEGIN')
         yield connection if block_given?
-        connection
+        connection.exec('COMMIT')
+      rescue StandardError => e
+        connection.exec('ROLLBACK')
+        raise e
       end
     end
 
