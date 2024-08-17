@@ -11,7 +11,17 @@ RSpec.describe 'Server' do
     Sinatra::Application
   end
 
-  context 'GET /tests' do
+  context 'when GET /' do
+    it 'returns a exam list html page' do
+      get '/'
+
+      expect(last_response).to be_ok
+      expect(last_response.content_type).to include 'text/html'
+      expect(last_response.body).to include 'Lista de Exames Médicos'
+    end
+  end
+
+  context 'when GET /tests' do
     it 'returns a test list' do
       DatabaseTableManager.drop_all
       DatabaseTableManager.migrate
@@ -83,7 +93,7 @@ RSpec.describe 'Server' do
     end
   end
 
-  context 'GET /tests/:token' do
+  context 'when GET /tests/:token' do
     it 'returns exam details for the given token' do
       DatabaseTableManager.drop_all
       DatabaseTableManager.migrate
@@ -145,17 +155,7 @@ RSpec.describe 'Server' do
     end
   end
 
-  context 'GET /' do
-    it 'returns a exam list html page' do
-      get '/'
-
-      expect(last_response).to be_ok
-      expect(last_response.content_type).to include 'text/html'
-      expect(last_response.body).to include 'Lista de Exames Médicos'
-    end
-  end
-
-  context 'POST /import' do
+  context 'when POST /import' do
     it 'successfully imports a csv file to the database' do
       DatabaseTableManager.drop_all
       DatabaseTableManager.migrate
