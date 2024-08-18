@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/static/v1?label=postgresql&message=16.4&color=blue&style=for-the-badge&logo=postgresql&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=redis&message=7.4.0&color=red&style=for-the-badge&logo=redis&logoColor=white"/>
     <img src="https://img.shields.io/static/v1?label=cypress&message=13.3.3&color=GREEN&style=for-the-badge&logo=cypress&logoColor=white"/>
-    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=95.29%&color=green&style=for-the-badge"/>
+    <img src="https://img.shields.io/static/v1?label=test%20coverage&message=95.5%&color=green&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=tests&message=24&color=green&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=status&message=development&color=yellow&style=for-the-badge"/>
     <img src="https://img.shields.io/static/v1?label=license&message=unlicense&color=GREEN&style=for-the-badge"/>
@@ -277,7 +277,7 @@ rake db:drop
 To run all migrations do:
 
 ```
-rake db:import_from_csv
+rake db:migrate
 ```
 
 And to import data from `.csv` run:
@@ -340,6 +340,8 @@ This is automatically installed when you start up Docker container or run Bundle
 :gem: [RSpec](https://github.com/rspec/rspec-metagem)
 
 :gem: [RuboCop](https://github.com/rubocop/rubocop)
+
+:gem: [RuboCop RSpec](https://github.com/rubocop/rubocop-rspec)
 
 :gem: [SimpleCov](https://github.com/simplecov-ruby/simplecov)
 
