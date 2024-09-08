@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      target: development
     container_name: app_web_server
     volumes:
       - .:/app
@@ -26,7 +28,7 @@ services:
   test_app:
     build:
       context: .
-      dockerfile: Dockerfile.test
+      target: test
     container_name: test_app_web_server
     volumes:
       - .:/app
@@ -70,8 +72,7 @@ services:
 
   cypress:
     build:
-      dockerfile: Dockerfile.cypress
-    image: cypress/included:13.3.3
+      target: cypress
     container_name: cypress
     volumes:
       - .:/app
@@ -83,8 +84,9 @@ services:
       - CYPRESS_baseUrl=http://app:3000
 
   sidekiq:
-    build: .
-    command: bundle exec sidekiq -r ./app/workers/csv_import_worker.rb
+    build:
+      target: development
+    command: bundle install && bundle exec sidekiq -r ./app/workers/csv_import_worker.rb
     volumes:
       - .:/app
     depends_on:
