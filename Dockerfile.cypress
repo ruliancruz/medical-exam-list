@@ -1,7 +1,0 @@
-FROM cypress/included:13.3.3
-
-WORKDIR /app
-
-COPY . /app
-
-CMD ["npx", "cypress", "run", '--headless']
